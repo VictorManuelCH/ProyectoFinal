@@ -91,15 +91,15 @@ class CheckoutTest < ApplicationSystemTestCase
     assert_text "Mi carrito"
     assert_text "Laptop Gamer"
 
-    # # Hacer clic en "Proceder a Pagar"
-    # click_link "Proceder a Pagar"
+    # Hacer clic en "Proceder a Pagar"
+    click_link "Proceder a Pagar"
 
-    # puts current_url
+    puts current_url
 
-    # # Verificar que se redirige a la página de pago
-    # visit payment_confirmation_cart_path
-    # assert_current_path payment_confirmation_cart_path
-    # assert_text "Gracias por tu compra!"
+    # Verificar que se redirige a la página de pago
+    #visit payment_confirmation_cart_path
+    assert_current_path payment_confirmation_cart_path
+    assert_text "Gracias por tu compra!"
 
   end
 end
