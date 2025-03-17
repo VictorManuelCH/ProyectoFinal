@@ -1,9 +1,12 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user: one
+  customer_id: 1
   total_price: 9.99
+  cart_id: 1  # Agrega un valor válido para cart_id
 
 two:
-  user: two
-  total_price: 9.99
+  customer_id: 2
+  total_price: 19.99
+  cart_id: 2  # Otro valor válido
+
