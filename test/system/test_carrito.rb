@@ -3,10 +3,12 @@ require "application_system_test_case"
 
 class CartTest < ApplicationSystemTestCase
   setup do
-    # Crear una categoría antes de crear el producto
+    puts "Ejecutando setup..."
+
+    # Crear categoría
     @category = Category.create!(name: "Electrónica")
 
-    # Crear un producto con la categoría asociada
+    # Crear producto
     @product = Product.create!(
       name: "Laptop Gamer",
       description: "Una laptop potente para gaming",
@@ -14,16 +16,19 @@ class CartTest < ApplicationSystemTestCase
       quantity: 10
     )
 
-    # Relacionar el producto con la categoría
+    # Asociar categoría al producto
     @product.categories << @category
+    puts "Categorías del producto: #{@product.categories.pluck(:name)}"
 
-    # Crear un archivo temporal para la imagen
+    # Verificar que el producto existe en la BD
+    puts "Productos en la BD: #{Product.count}"
+
+    # Crear imagen de prueba
     file = Tempfile.new(["test_image", ".jpg"])
     file.binmode
-    file.write("\xFF\xD8\xFF") # Encabezado mínimo para que sea un archivo JPG válido
+    file.write("\xFF\xD8\xFF")
     file.rewind
 
-    # Adjuntar la imagen temporal al producto
     @product.images.attach(
       io: file,
       filename: "test_image.jpg",
@@ -31,70 +36,60 @@ class CartTest < ApplicationSystemTestCase
     )
 
     file.close
-    file.unlink # Eliminar el archivo temporal después de adjuntarlo
+    file.unlink
 
     # Crear usuario y rol
     User.destroy_all
     @role = Role.create!(name: "Cliente") 
     @user = User.create!(
       email: "test@example.com",
-      password: "password1", # Misma contraseña que en el test
+      password: "password1",
       password_confirmation: "password1",
       role_id: @role.id
     )
+
+    puts "Setup ejecutado correctamente"
   end
 
   test "eliminar un producto del carrito" do
-    # Iniciar sesión
     visit new_user_session_path
     fill_in "Correo electrónico", with: @user.email
-    fill_in "Contraseña", with: "password1" # Corregido
-
+    fill_in "Contraseña", with: "password1"
     click_button "Iniciar sesión"
 
-    # Agregar producto al carrito
     visit products_path
-    assert_text "Laptop Gamer" # Corregido
+    assert_text "Laptop Gamer"
 
     click_button "Añadir al Carrito"
 
-    # Verificar que está en el carrito
     assert_text "Mi carrito"
-    assert_text "Laptop Gamer" # Corregido
+    assert_text "Laptop Gamer"
 
-    # Eliminar producto
     click_button "Eliminar"
 
-    # Verificar que se eliminó correctamente
-    refute_text "Laptop Gamer" # Corregido
+    refute_text "Laptop Gamer"
     assert_text "Tu carrito está vacío."
   end
 
   test "actualizar la cantidad de un producto en el carrito" do
-    # Iniciar sesión
     visit new_user_session_path
     fill_in "Correo electrónico", with: @user.email
-    fill_in "Contraseña", with: "password1" # Corregido
-
+    fill_in "Contraseña", with: "password1"
     click_button "Iniciar sesión"
 
-    # Agregar producto al carrito
     visit products_path
-    assert_text "Laptop Gamer" # Corregido
+    assert_text "Laptop Gamer"
 
     click_button "Añadir al Carrito"
 
-    # Verificar que está en el carrito
     assert_text "Mi carrito"
-    assert_text "Laptop Gamer" # Corregido
+    assert_text "Laptop Gamer"
 
-    # Actualizar cantidad
     fill_in "quantity", with: 3
     click_button "Actualizar"
 
-    # Verificar que se actualizó correctamente
     assert_text "Cantidad: 3"
-    assert_text "Total: $4500.00" # Ajustado para reflejar el precio real del producto (1500 * 3)
+    assert_text "Total: $4500.00"
   end
 end
 
