@@ -63,7 +63,7 @@ class CheckoutTest < ApplicationSystemTestCase
     click_button "Proceder a Pagar"
 
     # Verificar que se redirige a la página de pago
-    assert_current_path checkout_cart_path(@user.cart.id)
+    assert_current_path checkout_cart_path(@cart)
     assert_text "Gracias por tu compra!"
   end
 end
