@@ -8,6 +8,6 @@ one:
 two:
   user_id: 2  # Cambia 'customer_id' por 'user_id'
   total_price: 19.99
-  cart_id: 2  
+  cart_id: 1
 
 
