@@ -4,13 +4,13 @@ one:
   email: user1@example.com
   username: user1
   encrypted_password: password1
-  role_id: 1  # 🔥 Ahora hace referencia al ID definido en roles.yml
+
 
 two:
   email: user2@example.com
   username: user2
   encrypted_password: password2
-  role_id: 2  # 🔥 Asegúrate de que estos IDs existen en roles.yml
+
 
 
 
