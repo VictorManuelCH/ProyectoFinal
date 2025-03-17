@@ -65,4 +65,4 @@ jobs:
         
 
       - name: ✅ Ejecutar pruebas (incluyendo System Tests)
-        run: bundle exec rails test test/system/test_registro_usuario.rb
+        run: bundle exec rails test:system
