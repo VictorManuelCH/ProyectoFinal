@@ -58,6 +58,30 @@ class CheckoutTest < ApplicationSystemTestCase
     fill_in "Contraseña", with: "password1"
     click_button "Iniciar sesión"
 
+    # Crear carrito asociado al usuario
+    @cart = Cart.create!(user: @user)
+
+    # Crear un pedido asociado al carrito si aún no existe
+    order = @cart.order || Order.create(
+      user: @user,
+      cart: @cart,
+      total_price: @cart.total_price
+    )
+
+    # Verificar que el pedido se haya creado correctamente
+    assert_not_nil order
+
+    # Crear el pago asociado al pedido
+    @payment = Payment.create(
+      order: order,
+      total_amount: order.total_price,
+      payment_state: PaymentState.find_or_create_by(name: 'Confirmado'),
+      payment_method: PaymentMethod.first # Cambia según tus datos
+    )
+
+    # Verificar que el pago se haya creado
+    assert_not_nil @payment
+
     # Visitar productos y agregar uno al carrito
     visit product_path(producto)
     assert_text "Laptop Gamer"
