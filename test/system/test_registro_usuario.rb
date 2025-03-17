@@ -5,7 +5,7 @@ class UsersTest < ApplicationSystemTestCase
     setup do
         @role = Role.create!(name: "Cliente")
         @user = User.create!(
-          email: "user@example.com",
+          email: "user2@example.com",
           username: "user1",
           password: "password1",
           password_confirmation: "password1",
