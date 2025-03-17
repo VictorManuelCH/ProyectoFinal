@@ -1,8 +1,6 @@
 class Product < ApplicationRecord
 
-  if Rails.env.production? || Rails.env.development?
-    has_many_attached :images
-  end
+  has_many_attached :images
   
   has_many :cart_products
   has_many :carts, through: :cart_products
