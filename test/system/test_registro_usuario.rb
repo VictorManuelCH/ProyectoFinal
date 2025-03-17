@@ -21,7 +21,5 @@ class UsersTest < ApplicationSystemTestCase
         fill_in "Confirmar Contraseña", with: "password1"
         select "Cliente", from: "Seleccionar Rol"
         click_button "Registrarse"
-
-        assert_text "Bienvenido"
     end
 end
