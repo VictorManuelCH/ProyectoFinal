@@ -3,28 +3,21 @@ require "application_system_test_case"
 
 class UsersTest < ApplicationSystemTestCase
     setup do
-        User.destroy_all
+      User.destroy_all
+      @role = Role.create!(name: "Cliente")
     end
-      
-    setup do
-        @role = Role.create!(name: "Cliente")
-        @user = User.create!(
-          email: "user2@example.com",
-          username: "user1",
-          password: "password1",
-          password_confirmation: "password1",
-          role_id: @role.id # <- Agrega esto
-        )
-    end
-      
-
+  
     test "un usuario puede registrarse" do
-        visit new_user_registration_path
-        fill_in "Correo Electrónico", with: @user.email
-        fill_in "Contraseña", with: "password1"
-        fill_in "Confirmar Contraseña", with: "password1"
-        select "Cliente", from: "Seleccionar Rol"
-        click_button "Registrarse"
-        assert_text "BIENVENIDO A NUESTRA TIENDA"
+      visit new_user_registration_path
+  
+      unique_email = "user_#{SecureRandom.hex(4)}@example.com" # Correo único en cada ejecución
+      fill_in "Correo Electrónico", with: unique_email
+      fill_in "Contraseña", with: "password1"
+      fill_in "Confirmar Contraseña", with: "password1"
+      select "Cliente", from: "Seleccionar Rol"
+  
+      click_button "Registrarse"
+  
+      assert_text "BIENVENIDO A NUESTRA TIENDA"
     end
-end
+  end
