@@ -2,7 +2,7 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "selenium/webdriver"
-require "capybara/rails" # Asegúrate de cargar Capybara
+require "capybara/rails"
 
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
