@@ -4,11 +4,12 @@ require "application_system_test_case"
 class LoginTest < ApplicationSystemTestCase
   setup do
     User.destroy_all
+    @role = Role.create!(name: "Cliente") # Crear rol
     @user = User.create!(
       email: "test@example.com",
       password: "password1",
       password_confirmation: "password1",
-      role: "Cliente" # Asegúrate de que `role` es un atributo válido
+      role_id: @role.id # Asignar el rol correctamente
     )
   end
 
@@ -23,5 +24,6 @@ class LoginTest < ApplicationSystemTestCase
     assert_text "BIENVENIDO A NUESTRA TIENDA"
   end
 end
+
 
 
