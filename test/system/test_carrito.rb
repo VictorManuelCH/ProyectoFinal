@@ -4,10 +4,10 @@ require "application_system_test_case"
 class CartTest < ApplicationSystemTestCase
   setup do
     # Crear una categoría antes de crear el producto
-    categoria = Category.create!(name: "Electrónica")
+    @category = Category.create!(name: "Electrónica")
 
     # Crear un producto con la categoría asociada
-    producto = Product.create!(
+    @product = Product.create!(
       name: "Laptop Gamer",
       description: "Una laptop potente para gaming",
       price: 1500.00,
@@ -15,7 +15,7 @@ class CartTest < ApplicationSystemTestCase
     )
 
     # Relacionar el producto con la categoría
-    producto.categories << categoria
+    @product.categories << @category
 
     # Crear un archivo temporal para la imagen
     file = Tempfile.new(["test_image", ".jpg"])
@@ -24,7 +24,7 @@ class CartTest < ApplicationSystemTestCase
     file.rewind
 
     # Adjuntar la imagen temporal al producto
-    producto.images.attach(
+    @product.images.attach(
       io: file,
       filename: "test_image.jpg",
       content_type: "image/jpeg"
@@ -33,13 +33,14 @@ class CartTest < ApplicationSystemTestCase
     file.close
     file.unlink # Eliminar el archivo temporal después de adjuntarlo
 
+    # Crear usuario y rol
     User.destroy_all
-    @role = Role.create!(name: "Cliente") # Crear rol
+    @role = Role.create!(name: "Cliente") 
     @user = User.create!(
       email: "test@example.com",
-      password: "password1",
+      password: "password1", # Misma contraseña que en el test
       password_confirmation: "password1",
-      role_id: @role.id # Asignar el rol correctamente
+      role_id: @role.id
     )
   end
 
@@ -47,23 +48,25 @@ class CartTest < ApplicationSystemTestCase
     # Iniciar sesión
     visit new_user_session_path
     fill_in "Correo electrónico", with: @user.email
-    fill_in "Contraseña", with: "password123"
+    fill_in "Contraseña", with: "password1" # Corregido
+
     click_button "Iniciar sesión"
 
     # Agregar producto al carrito
     visit products_path
-    assert_text "Producto de prueba"
+    assert_text "Laptop Gamer" # Corregido
+
     click_button "Añadir al Carrito"
 
     # Verificar que está en el carrito
     assert_text "Mi carrito"
-    assert_text "Producto de prueba"
+    assert_text "Laptop Gamer" # Corregido
 
     # Eliminar producto
     click_button "Eliminar"
 
     # Verificar que se eliminó correctamente
-    refute_text "Producto de prueba"
+    refute_text "Laptop Gamer" # Corregido
     assert_text "Tu carrito está vacío."
   end
 
@@ -71,17 +74,19 @@ class CartTest < ApplicationSystemTestCase
     # Iniciar sesión
     visit new_user_session_path
     fill_in "Correo electrónico", with: @user.email
-    fill_in "Contraseña", with: "password123"
+    fill_in "Contraseña", with: "password1" # Corregido
+
     click_button "Iniciar sesión"
 
     # Agregar producto al carrito
     visit products_path
-    assert_text "Producto de prueba"
+    assert_text "Laptop Gamer" # Corregido
+
     click_button "Añadir al Carrito"
 
     # Verificar que está en el carrito
     assert_text "Mi carrito"
-    assert_text "Producto de prueba"
+    assert_text "Laptop Gamer" # Corregido
 
     # Actualizar cantidad
     fill_in "quantity", with: 3
@@ -89,6 +94,7 @@ class CartTest < ApplicationSystemTestCase
 
     # Verificar que se actualizó correctamente
     assert_text "Cantidad: 3"
-    assert_text "Total: $300.00"
+    assert_text "Total: $4500.00" # Ajustado para reflejar el precio real del producto (1500 * 3)
   end
 end
+
