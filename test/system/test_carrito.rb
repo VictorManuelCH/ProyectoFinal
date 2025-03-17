@@ -10,11 +10,13 @@ class CartTest < ApplicationSystemTestCase
       quantity: 10
     )
 
+    User.destroy_all
+    @role = Role.create!(name: "Cliente") # Crear rol
     @user = User.create!(
-      email: "cliente@example.com",
-      password: "password123",
-      password_confirmation: "password123",
-      role: Role.create!(name: "Cliente")
+      email: "test@example.com",
+      password: "password1",
+      password_confirmation: "password1",
+      role_id: @role.id # Asignar el rol correctamente
     )
   end
 
