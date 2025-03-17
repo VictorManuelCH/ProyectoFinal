@@ -61,6 +61,9 @@ class CheckoutTest < ApplicationSystemTestCase
     # Crear carrito asociado al usuario
     @cart = Cart.create!(user: @user)
 
+    # Crear el carrito y añadir el producto
+    @cart.cart_products.create!(product: producto, quantity: 1)
+
     # Crear un pedido asociado al carrito si aún no existe
     order = @cart.order || Order.create(
       user: @user,
@@ -97,7 +100,6 @@ class CheckoutTest < ApplicationSystemTestCase
     puts current_url
 
     # Verificar que se redirige a la página de pago
-    #visit payment_confirmation_cart_path
     assert_current_path payment_confirmation_cart_path
     assert_text "Gracias por tu compra!"
 

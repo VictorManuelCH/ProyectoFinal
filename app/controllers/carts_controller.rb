@@ -72,7 +72,6 @@ class CartsController < ApplicationController
     else
       redirect_to cart_path, alert: 'Hubo un problema al procesar el pago.'
     end
-    redirect_to payment_confirmation_cart_path, notice: 'Pago realizado correctamente.'
   end
 
   # def checkout
