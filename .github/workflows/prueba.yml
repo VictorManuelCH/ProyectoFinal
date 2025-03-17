@@ -36,8 +36,10 @@ jobs:
 
       - name: 📦 Instalar dependencias
         run: |
-          gem install bundler
+          gem install bundler --no-document
+          bundle config set deployment 'true'
           bundle install --jobs 4 --retry 3
+        
       
       - name: Install Chrome and WebDriver
         run: |
@@ -57,6 +59,10 @@ jobs:
       - name: 🗄️ Configurar base de datos
         run: |
           bin/rails db:drop db:create db:migrate
+      
+      - name: Debug file structure
+        run: ls -R test
+        
 
       - name: ✅ Ejecutar pruebas (incluyendo System Tests)
         run: bundle exec rails test test/system/test_registro_usuario.rb
