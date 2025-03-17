@@ -1,6 +1,6 @@
 require "test_helper"
 
-class UsersTest < ActionDispatch::SystemTestCase
+class UsersTest < ApplicationSystemTestCase
   setup do
     @role = Role.create!(name: "Customer")
     @user = User.create!(
@@ -9,7 +9,7 @@ class UsersTest < ActionDispatch::SystemTestCase
       password: "password1",
       password_confirmation: "password1"
     )
-    UserRole.create!(user: @user, role: @role) # 🔥 Asigna el rol correctamente
+    UserRole.create!(user: @user, role: @role)
   end
 
   test "un usuario puede registrarse" do
@@ -22,4 +22,3 @@ class UsersTest < ActionDispatch::SystemTestCase
     assert_text "Bienvenido"
   end
 end
-

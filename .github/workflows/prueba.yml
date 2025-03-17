@@ -42,19 +42,21 @@ jobs:
       - name: Install Chrome and WebDriver
         run: |
           sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
           sudo apt-get install -y google-chrome-stable
           CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-          curl -sS -o chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
-          unzip chromedriver.zip -d /usr/local/bin/
-          rm chromedriver.zip
+          wget -N https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip -d /usr/local/bin/
+          rm chromedriver_linux64.zip
           sudo chmod +x /usr/local/bin/chromedriver
           chromedriver --version
 
       - name: 🗄️ Configurar base de datos
         run: |
           bin/rails db:drop db:create db:migrate
-        
 
       - name: ✅ Ejecutar pruebas (incluyendo System Tests)
         run: bundle exec rails test test/system/test_registro_usuario.rb
-        

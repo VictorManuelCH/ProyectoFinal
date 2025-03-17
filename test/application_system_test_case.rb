@@ -18,6 +18,6 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     options.add_argument("--headless") # Solo en GitHub Actions para ejecutar en modo headless
   end
 
-  driven_by :selenium, using: :chrome, options: { browser: :chrome, options: options }
+  driven_by :selenium, using: :chrome, options: options # Corrección aquí
 end
 
