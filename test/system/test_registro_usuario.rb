@@ -16,9 +16,10 @@ class UsersTest < ApplicationSystemTestCase
 
     test "un usuario puede registrarse" do
         visit new_user_registration_path
-        fill_in "Email", with: @user.email
+        fill_in "Correo Electrónico", with: @user.email
         fill_in "Contraseña", with: "password1"
         fill_in "Confirmación de contraseña", with: "password1"
+        select "Cliente", from: "Seleccionar Rol"
         click_button "Registrarse"
 
         assert_text "Bienvenido"
