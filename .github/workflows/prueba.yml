@@ -38,6 +38,14 @@ jobs:
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3
+      
+      - name: Install Chrome and WebDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          curl -sS -o chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+          sudo unzip chromedriver.zip -d /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
 
       - name: 🗄️ Configurar base de datos
         run: |
