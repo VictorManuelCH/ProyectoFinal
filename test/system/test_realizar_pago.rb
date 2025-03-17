@@ -63,7 +63,9 @@ class CheckoutTest < ApplicationSystemTestCase
     click_button "Proceder a Pagar"
 
     # Verificar que se redirige a la página de pago
-    assert_current_path checkout_cart_path(@cart)
-    assert_text "Gracias por tu compra!"
+    #visit checkout_cart_path  # Ir a la página de checkout
+    assert_current_path checkout_cart_path  # Verificar que estamos en la URL correcta
+    assert_text "Gracias por tu compra!"  # Verificar el mensaje de confirmación
+
   end
 end
