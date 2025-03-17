@@ -73,6 +73,7 @@ class CheckoutTest < ApplicationSystemTestCase
     puts current_url
 
     # Verificar que se redirige a la página de pago
+    visit payment_confirmation_cart_path
     assert_current_path payment_confirmation_cart_path
     assert_text "Gracias por tu compra!"
 
