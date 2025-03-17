@@ -1,0 +1,20 @@
+<h1>Selecciona tu Método de Pago</h1>
+
+<% if @cart.cart_products.any? %>
+  <%= form_with url: process_payment_cart_path(@cart), method: :get do |form| %>
+    <div class="payment-method">
+      <h4>Métodos de pago disponibles</h4>
+      <% @payment_methods.each do |method| %>
+        <div class="payment-method-item">
+          <%= radio_button_tag :payment_method, method.id %> <%= method.name %>
+        </div>
+      <% end %>
+
+      <div class="text-right">
+        <%= form.submit 'Proceder con el pago', class: 'btn btn-success' %>
+      </div>
+    </div>
+  <% end %>
+<% else %>
+  <p>No hay productos en tu carrito.</p>
+<% end %>

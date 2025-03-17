@@ -1,0 +1,52 @@
+<div class="container my-5">
+  <div class="card shadow">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">Agregar o Editar Categoría</h2>
+
+      <!-- Mostrar el flash de success o error (mensajes emergentes) -->
+      <% if flash[:notice] %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>¡Éxito!</strong> <%= flash[:notice] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% elsif flash[:alert] %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>¡Error!</strong> <%= flash[:alert] %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
+
+      <%= form_with(model: category, local: true) do |form| %>
+
+        <!-- Mensajes de error -->
+        <% if category.errors.any? %>
+          <div class="alert alert-danger">
+            <h4><%= pluralize(category.errors.count, "error") %> impidieron guardar esta categoría:</h4>
+            <ul>
+              <% category.errors.full_messages.each do |error| %>
+                <li><%= error %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Nombre de la Categoría -->
+        <div class="mb-3">
+          <%= form.label :name, "Nombre de la Categoría", class: "form-label" %>
+          <%= form.text_field :name, class: "form-control", placeholder: "Ingresa el nombre de la categoría" %>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="d-grid gap-2">
+          <!-- Botón de cancelar/volver a la página principal -->
+          <%= link_to "Volver al inicio", root_path, class: "btn btn-secondary" %>
+
+          <!-- Botón de guardar -->
+          <%= form.submit "Guardar Categoría", class: "btn btn-primary" %>
+        </div>
+        
+      <% end %>
+    </div>
+  </div>
+</div>
+

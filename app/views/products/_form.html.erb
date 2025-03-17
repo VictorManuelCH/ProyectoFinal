@@ -1,0 +1,95 @@
+<div class="container my-5">
+  <div class="card shadow">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">Agregar o Editar Producto</h2>
+
+      <%= form_with(model: product, local: true, html: { multipart: true }) do |form| %>
+        
+        <% if product.errors.any? %>
+          <div class="alert alert-danger">
+            <h4><%= pluralize(product.errors.count, "error") %> impidieron guardar este producto:</h4>
+            <ul>
+              <% product.errors.each do |error| %>
+                <li><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <!-- Nombre del Producto -->
+        <div class="mb-3">
+          <%= form.label :name, "Nombre del Producto", class: "form-label" %>
+          <%= form.text_field :name, class: "form-control", placeholder: "Ingresa el nombre del producto" %>
+        </div>
+
+        <!-- Descripción -->
+        <div class="mb-3">
+          <%= form.label :description, "Descripción", class: "form-label" %>
+          <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Escribe una descripción para el producto" %>
+        </div>
+
+        <div class="row">
+          <!-- Precio -->
+          <div class="col-md-6 mb-3">
+            <%= form.label :price, "Precio", class: "form-label" %>
+            <%= form.text_field :price, class: "form-control", placeholder: "Ejemplo: 100.00" %>
+          </div>
+
+          <!-- Cantidad -->
+          <div class="col-md-6 mb-3">
+            <%= form.label :quantity, "Cantidad en Stock", class: "form-label" %>
+            <%= form.text_field :quantity, class: "form-control", placeholder: "Ejemplo: 10" %>
+          </div>
+        </div>
+
+        <!-- Selección de Categorías -->
+        <div class="mb-3">
+          <%= form.label :category_ids, "Categorías", class: "form-label" %>
+          <%= form.collection_select :category_ids, @categories, :id, :name, 
+            { prompt: "Selecciona categorías" }, 
+            { multiple: true, size: 5, class: "form-select" } %>
+        </div>
+
+        <!-- Subir Imágenes -->
+        <div class="mb-3">
+          <%= form.label :images, "Subir Imágenes", class: "form-label" %>
+          <%= form.file_field :images, multiple: true, class: "form-control", id: "product_images" %>
+          
+          <div class="mt-3" id="image-preview-container">
+            <!-- Vista previa de las imágenes subidas -->
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="d-grid gap-2">
+          <!-- Botón de cancelar/volver a la página principal -->
+          <%= link_to "Volver al inicio", root_path, class: "btn btn-secondary" %>
+
+          <!-- Botón de guardar -->
+          <%= form.submit "Guardar Producto", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Script para Vista Previa de Imágenes -->
+<script>
+  document.getElementById('product_images').addEventListener('change', function(event) {
+    const previewContainer = document.getElementById('image-preview-container');
+    previewContainer.innerHTML = ''; // Limpiar contenido previo
+    const files = event.target.files;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.classList.add('img-thumbnail', 'm-2');
+        img.style.width = '100px'; // Tamaño de la vista previa
+        previewContainer.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>

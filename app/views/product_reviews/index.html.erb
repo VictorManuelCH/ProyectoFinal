@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Product reviews</h1>
+
+<div id="product_reviews">
+  <% @product_reviews.each do |product_review| %>
+    <%= render product_review %>
+    <p>
+      <%= link_to "Show this product review", product_review %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New product review", new_product_review_path %>

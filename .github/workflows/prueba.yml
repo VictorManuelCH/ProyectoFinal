@@ -1,0 +1,48 @@
+name: Run Tests
+
+on: [push, pull_request]  # Ejecuta en cada push y PR
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15  # Usa PostgreSQL 15 (o la versión que prefieras)
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tienda3_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/tienda3_test"
+
+    steps:
+      - name: 🛠️ Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🔧 Configurar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.7  # Ajusta según tu versión
+
+      - name: 📦 Instalar dependencias
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+
+      - name: 🗄️ Configurar base de datos
+        run: |
+          bin/rails db:create db:schema:load --trace
+
+      - name: ✅ Ejecutar pruebas de sistema
+        run: bin/rails test:system
+        

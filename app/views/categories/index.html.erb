@@ -1,0 +1,47 @@
+<div class="container my-5">
+  <!-- Cuadro principal con sombra -->
+  <div class="card shadow-lg">
+    <!-- Título de la tarjeta con estilo -->
+    <div class="card-header bg-primary text-white text-center">
+      <h1 class="mb-0">Categorías</h1>
+    </div>
+
+    <!-- Cuerpo de la tarjeta con el contenido -->
+    <div class="card-body">
+      <!-- Mensaje de notificación -->
+      <% if notice %>
+        <div class="alert alert-success" role="alert">
+          <%= notice %>
+        </div>
+      <% end %>
+
+      <!-- Contenedor para las categorías -->
+      <div id="categories" class="row">
+        <% @categories.each do |category| %>
+          <div class="col-md-4 mb-4">
+            <!-- Cuadro de la categoría -->
+            <div class="card shadow-sm">
+              <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0"><%= category.name %></h5>
+              </div>
+              <div class="card-body">
+                <p><strong>Nombre de la categoría:</strong> <%= category.name %></p>
+                <!-- Botones de acción -->
+                <div class="d-flex justify-content-between">
+                  <%= link_to "Editar", edit_category_path(category), class: "btn btn-warning btn-sm" %>
+                  <%= link_to "Eliminar", category, method: :delete, data: { confirm: "¿Estás seguro de que quieres eliminar esta categoría?" }, class: "btn btn-danger btn-sm" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Enlace para agregar una nueva categoría -->
+      <div class="text-center mt-4">
+        <%= link_to "Nueva categoría", new_category_path, class: "btn btn-primary" %>
+        <%= link_to "Volver al inicio", root_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>

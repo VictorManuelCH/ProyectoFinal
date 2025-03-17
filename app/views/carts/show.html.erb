@@ -1,0 +1,142 @@
+<h1 class="text-center my-4 p-3 bg-primary text-white rounded shadow-lg">
+  <i class="fas fa-shopping-cart"></i> Mi carrito
+</h1>
+
+<% if user_signed_in? %>
+  <% if @cart.cart_products.present? %>
+    <div class="container">
+      <div class="card shadow-lg p-4">
+        <div class="card-header bg-primary text-white">
+          <h4 class="text-center">Productos en tu carrito</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                  <th>Subtotal</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @cart.cart_products.each do |cart_product| %>
+                  <% product = cart_product.product %>
+                  <% if product.quantity == 0 %> 
+                    <!-- Producto agotado -->
+                    <tr>
+                      <td><%= product.name %> (Producto no disponible)</td>
+                      <td><%= cart_product.quantity %></td>
+                      <td><%= number_to_currency(product.price) %></td>
+                      <td><%= number_to_currency(product.price * cart_product.quantity) %></td>
+                      <td>
+                        <%= button_to 'Eliminar', remove_product2_cart_path(cart_product.product.id), method: :delete, class: 'btn btn-danger' %>
+                      </td>
+                    </tr>
+                  <% else %>
+                    <!-- Producto disponible -->
+                    <tr>
+                      <td><%= product.name %></td>
+                      <td>
+                        <%= form_with url: update_quantity2_cart_path(cart_product.product.id), method: :patch, local: true do |form| %>
+                          <div class="input-group">
+                            <%= form.number_field :quantity, value: cart_product.quantity, min: 1, class: 'form-control' %>
+                            <%= form.submit 'Actualizar', class: 'btn btn-primary' %>
+                          </div>
+                        <% end %>
+                      </td>
+                      <td><%= number_to_currency(product.price) %></td>
+                      <td><%= number_to_currency(product.price * cart_product.quantity) %></td>
+                      <td>
+                        <%= button_to 'Eliminar', remove_product2_cart_path(cart_product.product.id), method: :delete, class: 'btn btn-danger' %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </tbody>
+            </table>
+
+            <div class="text-right">
+              <h4>Total: <%= number_to_currency(@cart.total_price) %></h4>
+              <%= button_to 'Proceder a Pagar', checkout_cart_path(@cart), method: :get, class: 'btn btn-success' %>
+            </div>
+            <%= link_to "Volver al inicio", root_path, class: "btn btn-secondary" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p class="text-center">Tu carrito está vacío.</p>
+    <%= link_to "Volver al inicio", root_path, class: "btn btn-secondary" %>
+  <% end %>
+<% else %>
+  <!-- Vista para usuarios no registrados -->
+  <% if @cart_items.present? %>
+    <div class="container">
+      <div class="card shadow-lg p-4">
+        <div class="card-header bg-primary text-white">
+          <h4 class="text-center">Productos en tu carrito</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                  <th>Subtotal</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @products.each do |product| %>
+                  <% quantity = @cart_items[product.id.to_s] || 0 %>
+                  <% if product.quantity == 0 %>
+                    <!-- Producto agotado -->
+                    <tr>
+                      <td><%= product.name %> (Producto no disponible)</td>
+                      <td><%= quantity %></td>
+                      <td><%= number_to_currency(product.price) %></td>
+                      <td><%= number_to_currency(product.price * quantity) %></td>
+                      <td>
+                        <%= button_to 'Eliminar', remove_product_cart_path(product_id: product.id), method: :post, class: 'btn btn-danger' %>
+                      </td>
+                    </tr>
+                  <% else %>
+                    <!-- Producto disponible -->
+                    <tr>
+                      <td><%= product.name %></td>
+                      <td>
+                        <%= form_with url: update_quantity_cart_path(product_id: product.id), method: :post, local: true do |form| %>
+                          <div class="input-group">
+                            <%= form.number_field :quantity, value: quantity, min: 1, class: 'form-control' %>
+                            <%= form.submit 'Actualizar', class: 'btn btn-primary' %>
+                          </div>
+                        <% end %>
+                      </td>
+                      <td><%= number_to_currency(product.price) %></td>
+                      <td><%= number_to_currency(product.price * quantity) %></td>
+                      <td>
+                        <%= button_to 'Eliminar', remove_product_cart_path(product_id: product.id), method: :post, class: 'btn btn-danger' %>
+                      </td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </tbody>
+            </table>
+            <div class="text-right">
+              <h4>Total: <%= number_to_currency(@total) %></h4>
+              <%= button_to 'Proceder a Pagar', checkout_cart_path(@cart), method: :get, class: 'btn btn-success' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <p class="text-center">Tu carrito está vacío.</p>
+  <% end %>
+<% end %>
+

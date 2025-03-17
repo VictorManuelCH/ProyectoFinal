@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card shadow" style="width: 30rem;">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">Registro</h2>
+
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: 'needs-validation', novalidate: true }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="mb-3">
+          <%= f.label :email, "Correo Electrónico", class: 'form-label' %>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control', placeholder: "Ingresa tu correo electrónico" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :password, "Contraseña", class: 'form-label' %>
+          <% if @minimum_password_length %>
+            <small class="form-text text-muted">Mínimo <%= @minimum_password_length %> caracteres</small>
+          <% end %>
+          <%= f.password_field :password, autocomplete: "new-password", class: 'form-control', placeholder: "Crea una contraseña" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :password_confirmation, "Confirmar Contraseña", class: 'form-label' %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'form-control', placeholder: "Repite tu contraseña" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :role_id, "Seleccionar Rol", class: 'form-label' %>
+          <%= f.collection_select :role_id, Role.all, :id, :name, { prompt: "Selecciona un rol" }, { class: 'form-select' } %>
+        </div>
+
+        <div class="d-grid gap-2">
+          <%= f.submit "Registrarse", class: 'btn btn-primary btn-block' %>
+        </div>
+      <% end %>
+
+      <div class="mt-3 text-center">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="container my-5">
+  <!-- Título del producto -->
+  <div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+      <h3 class="card-title mb-0">Detalles del Producto</h3>
+    </div>
+    <div class="card-body">
+      <!-- Contenedor para la imagen y detalles del producto -->
+      <div class="row">
+        <!-- Imagen del producto a la izquierda -->
+        <div class="col-md-4 mb-3">
+          <% @product.images.each do |image| %>
+            <%= image_tag image, class: "img-fluid rounded" %> <!-- Imagen con borde redondeado y tamaño responsivo -->
+          <% end %>
+        </div>
+
+        <!-- Detalles del producto a la derecha -->
+        <div class="col-md-8">
+          <!-- Nombre del Producto -->
+          <h4 class="card-title"><strong>Nombre:</strong> <%= @product.name %></h4>
+
+          <!-- Descripción -->
+          <p><strong>Descripción:</strong> <%= @product.description %></p>
+
+          <!-- Precio -->
+          <p><strong>Precio:</strong> $<%= @product.price %></p>
+
+          <!-- Cantidad en Stock -->
+          <p><strong>Cantidad disponible:</strong> <%= @product.quantity %></p>
+
+          <!-- Categorías -->
+          <p><strong>Categorías:</strong> <%= @product.categories.map(&:name).join(", ") %></p>
+        </div>
+      </div>
+
+      <!-- Formulario para añadir al carrito -->
+      <%= form_with url: add_product_cart_path(product_id: @product.id), method: :post, local: true do |f| %>
+        <div class="form-group">
+          <label for="quantity">Cantidad:</label>
+          <%= number_field_tag :quantity, 1, min: 1, max: @product.quantity, class: 'form-control' %>
+        </div>
+          <%= f.submit 'Añadir al Carrito', class: 'btn btn-success mt-3' %>
+      <% end %>
+
+      <!-- Acciones de edición y eliminación solo para administradores -->
+      <% if current_user&.administrador? %> 
+        <div class="d-flex justify-content-between mt-4">
+          <%= link_to "Editar este producto", edit_product_path(@product), class: "btn btn-warning btn-sm" %>
+          <%= button_to "Eliminar este producto", @product, method: :delete, data: { confirm: "¿Estás seguro de que deseas eliminar este producto?" }, class: "btn btn-danger btn-sm" %>
+        </div>
+      <% end %>
+
+      <!-- Volver al inicio -->
+      <div class="mt-4">
+        <%= link_to "Volver al inicio", root_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>

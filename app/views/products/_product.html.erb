@@ -1,0 +1,35 @@
+<div id="<%= dom_id product %>">
+  <p>
+    <strong>Name:</strong>
+    <%= product.name %>
+  </p>
+
+  <p>
+    <strong>Description:</strong>
+    <%= product.description %>
+  </p>
+
+  <p>
+    <strong>Quantity:</strong>
+    <%= product.quantity %>
+  </p>
+
+  <p>
+    <strong>Price:</strong>
+    <%= product.price %>
+  </p>
+
+  <p>
+    <strong>Categorías:</strong>
+    <%= @product.categories.map(&:name).join(", ") %>
+  </p>
+
+  <h2>Imágenes:</h2>
+  <div>
+    <% @product.images.each do |image| %>
+      <%= image_tag image.variant(resize_to_limit: [300, 300]) %>
+    <% end %>
+  </div>
+
+
+</div>

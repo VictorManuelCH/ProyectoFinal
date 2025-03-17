@@ -1,0 +1,21 @@
+<h1 class="text-center my-4 p-4 bg-success text-white rounded shadow-lg">
+  <i class="fas fa-check-circle"></i> Confirmación de Pago
+</h1>
+
+<div class="container my-4">
+  <div class="text-center p-4 border rounded bg-light shadow-sm">
+    <p class="h4 text-success"><strong>Gracias por tu compra!</strong></p>
+    <p class="h5">Total: <%= number_to_currency(@cart.total_price) %></p>
+
+    <% if @payment %>
+      <p><strong>Estado del pago:</strong> <%= @payment&.payment_state&.name == 'Pendiente' ? 'Confirmado' : @payment&.payment_state&.name || 'Desconocido' %></p>
+      <p><strong>Método de pago:</strong> <%= @payment.payment_method&.name || 'Desconocido' %></p>
+    <% else %>
+      <p><strong>No se encontró información de pago.</strong></p>
+    <% end %>
+  </div>
+
+  <div class="text-center my-4">
+    <%= link_to 'Volver al inicio', root_path, class: 'btn btn-primary btn-lg' %>
+  </div>
+</div>
