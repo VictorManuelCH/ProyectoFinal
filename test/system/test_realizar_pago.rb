@@ -4,14 +4,25 @@ require "application_system_test_case"
 class CheckoutTest < ApplicationSystemTestCase
   setup do
     User.destroy_all
-    @role = Role.create!(name: "Cliente") # Crear rol
+    
+    # Crear rol
+    @role = Role.create!(name: "Cliente") 
+    
+    # Crear usuario con rol
     @user = User.create!(
       email: "test@example.com",
       password: "password1",
       password_confirmation: "password1",
-      role_id: @role.id # Asignar el rol correctamente
+      role_id: @role.id
     )
+  
+    # Iniciar sesión con Devise (si lo usas)
+    login_as(@user, scope: :user) 
+  
+    # Crear carrito asociado al usuario
+    @cart = Cart.create!(user: @user)
   end
+  
 
   test "un usuario puede proceder al pago desde el carrito" do
     # Crear una categoría antes de crear el producto
@@ -47,7 +58,7 @@ class CheckoutTest < ApplicationSystemTestCase
     # Iniciar sesión
     visit new_user_session_path
     fill_in "Correo electrónico", with: @user.email
-    fill_in "Contraseña", with: "password123"
+    fill_in "Contraseña", with: "password1"
     click_button "Iniciar sesión"
 
     # Visitar productos y agregar uno al carrito
