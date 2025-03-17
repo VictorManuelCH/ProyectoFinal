@@ -43,9 +43,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
-          curl -sS -o chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
-          sudo unzip chromedriver.zip -d /usr/local/bin/
+          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          curl -sS -o chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
+          unzip chromedriver.zip -d /usr/local/bin/
+          rm chromedriver.zip
           sudo chmod +x /usr/local/bin/chromedriver
+          chromedriver --version
 
       - name: 🗄️ Configurar base de datos
         run: |
