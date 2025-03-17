@@ -3,12 +3,14 @@ require "test_helper"
 class CartTest < ActiveSupport::TestCase
   # Test para crear un carrito
   test "puede crear un carrito" do
+    user = User.create!(email: "test@example.com", password: "password")
     cart = Cart.new
     assert cart.save, "El carrito debería guardarse correctamente"
   end
 
   # Test para leer un carrito
   test "puede encontrar un carrito" do
+    user = User.create!(email: "test@example.com", password: "password")
     cart = Cart.create
     encontrado = Cart.find_by(id: cart.id)
     assert_equal cart, encontrado, "El carrito debería encontrarse correctamente"
@@ -16,6 +18,7 @@ class CartTest < ActiveSupport::TestCase
 
   # Test para actualizar un carrito
   test "puede actualizar un carrito" do
+    user = User.create!(email: "test@example.com", password: "password")
     cart = Cart.create
     cart.update(user_id: 1)  # Simulamos que el carrito pertenece a un usuario
     assert_equal 1, cart.user_id, "El user_id del carrito debería actualizarse correctamente"
@@ -23,20 +26,23 @@ class CartTest < ActiveSupport::TestCase
 
   # Test para eliminar un carrito
   test "puede eliminar un carrito" do
+    user = User.create!(email: "test@example.com", password: "password")
     cart = Cart.create
     cart_id = cart.id
     cart.destroy
     assert_not Cart.exists?(cart_id), "El carrito debería eliminarse correctamente"
   end
-  
+
   # Test para verificar que un carrito vacío tiene total 0
   test "debe devolver total 0 si el carrito está vacío" do
+    user = User.create!(email: "test@example.com", password: "password")
     cart = Cart.create
     assert_equal 0, cart.total_price, "El total de un carrito vacío debe ser 0"
   end
 
   # Test para asegurarse de que un carrito puede tener productos
   test "puede contener productos" do
+    user = User.create!(email: "test@example.com", password: "password")
     cart = Cart.create
     product = Product.create(name: "Producto", price: 20.0, quantity: 10)
 
@@ -47,6 +53,7 @@ class CartTest < ActiveSupport::TestCase
 
   # Test para verificar que la cantidad del producto en el carrito es la correcta
   test "cantidad del producto en el carrito es correcta" do
+    user = User.create!(email: "test@example.com", password: "password")
     cart = Cart.create
     product = Product.create(name: "Producto", price: 50.0, quantity: 10)
 
@@ -57,6 +64,7 @@ class CartTest < ActiveSupport::TestCase
 
   # Test para verificar la eliminación de productos en el carrito
   test "debe eliminar productos cuando se elimina el carrito" do
+    user = User.create!(email: "test@example.com", password: "password")
     cart = Cart.create
     product = Product.create(name: "Producto", price: 30.0, quantity: 5)
 
