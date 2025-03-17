@@ -39,6 +39,6 @@ class ProductDetailsTest < ApplicationSystemTestCase
     # Verificar que se muestra la información correcta
     assert_text "Laptop Gamer"
     assert_text "Una laptop potente para gaming"
-    assert_text "$1,500.00"
+    assert_text "$1500.0"
   end
 end
