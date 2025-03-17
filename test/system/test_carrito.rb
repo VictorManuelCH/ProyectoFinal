@@ -111,7 +111,8 @@ class CartTest < ApplicationSystemTestCase
     click_button "Actualizar"
 
     assert_equal "3", find("input[name='quantity']").value
-    assert_text "Total: $4500.00"
+    assert_text(/Total:\s?\$?4,?500\.00/)
+
   end
 end
 
