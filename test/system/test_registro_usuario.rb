@@ -3,6 +3,10 @@ require "application_system_test_case"
 
 class UsersTest < ApplicationSystemTestCase
     setup do
+        User.destroy_all
+    end
+      
+    setup do
         @role = Role.create!(name: "Cliente")
         @user = User.create!(
           email: "user2@example.com",
