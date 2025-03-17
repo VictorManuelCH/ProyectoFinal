@@ -38,23 +38,30 @@ jobs:
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3
-      
-      - name: Install Chrome and WebDriver
+
+      - name: 🖥️ Instalar Chromium y ChromeDriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-          curl -sS -o chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
-          unzip chromedriver.zip -d /usr/local/bin/
-          rm chromedriver.zip
+          sudo apt-get install -y chromium-browser
+          CHROME_VERSION=$(chromium-browser --version | awk '{print $2}')
+          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)
+          wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
           chromedriver --version
+          chromium-browser --version
 
       - name: 🗄️ Configurar base de datos
         run: |
           bin/rails db:drop db:create db:migrate
-        
+
+      - name: 🔄 Iniciar servidor de pantalla virtual (Xvfb)
+        run: |
+          sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1280x1024x24 &
 
       - name: ✅ Ejecutar pruebas (incluyendo System Tests)
+        env:
+          DISPLAY: ":99"
         run: bundle exec rails test test/system/test_registro_usuario.rb
-        
