@@ -60,7 +60,7 @@
 
             <div class="text-right">
               <h4>Total: <%= number_to_currency(@cart.total_price) %></h4>
-              <%= button_to 'Proceder a Pagar', checkout_cart_path(@cart), method: :get, class: 'btn btn-success' %>
+              <%= link_to 'Proceder a Pagar', checkout_cart_path, class: 'btn btn-success' %>
             </div>
             <%= link_to "Volver al inicio", root_path, class: "btn btn-secondary" %>
           </div>
@@ -129,7 +129,7 @@
             </table>
             <div class="text-right">
               <h4>Total: <%= number_to_currency(@total) %></h4>
-              <%= button_to 'Proceder a Pagar', checkout_cart_path(@cart), method: :get, class: 'btn btn-success' %>
+              <%= link_to 'Proceder a Pagar', checkout_cart_path, class: 'btn btn-success' %>
             </div>
           </div>
         </div>

@@ -60,12 +60,13 @@ class CheckoutTest < ApplicationSystemTestCase
     assert_text "Laptop Gamer"
 
     # Hacer clic en "Proceder a Pagar"
-    click_button "Proceder a Pagar"
+    click_link "Proceder a Pagar"
 
     puts current_url
 
     # Verificar que se redirige a la página de pago
     assert_current_path payment_confirmation_cart_path
     assert_text "Gracias por tu compra!"
+
   end
 end
