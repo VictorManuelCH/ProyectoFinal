@@ -20,7 +20,6 @@ class CheckoutTest < ApplicationSystemTestCase
     @cart = Cart.create!(user: @user)
   end
   
-
   test "un usuario puede proceder al pago desde el carrito" do
     # Crear una categoría antes de crear el producto
     categoria = Category.create!(name: "Electrónica")
@@ -97,15 +96,11 @@ class CheckoutTest < ApplicationSystemTestCase
     # Hacer clic en "Proceder a Pagar"
     click_link "Proceder a Pagar"
 
-    puts current_url
+    # Verificar que se redirige correctamente
+    assert_current_path(payment_confirmation_cart_path) # Verificar la ruta de la redirección
 
-    # Verificar que se redirige a la página de pago
-    if current_path != payment_confirmation_cart_path
-      puts "¡ADVERTENCIA! Redirección incorrecta: #{current_path}. Pero el test sigue pasando."
-    end
-
-    visit payment_confirmation_cart_path
+    # Verificar que la página de pago contiene el mensaje de confirmación
     assert_text "Gracias por tu compra!"
-
   end
 end
+
