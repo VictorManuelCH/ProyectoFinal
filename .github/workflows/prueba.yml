@@ -64,5 +64,10 @@ jobs:
         run: ls -R test
         
 
-      - name: ✅ Ejecutar pruebas (incluyendo System Tests)
-        run: bundle exec rails test:system
+      - name: ✅ Ejecutar pruebas de sistema individualmente
+        run: |
+          for test_file in $(find test/system -name "*.rb"); do
+            echo "Ejecutando: $test_file"
+            bundle exec rails test $test_file
+          done
+      
