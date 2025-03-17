@@ -6,7 +6,8 @@ class UsersTest < ActionDispatch::SystemTestCase
     @user = User.create!(
       email: "user@example.com",
       username: "user1",
-      encrypted_password: "password1"
+      password: "password1",
+      password_confirmation: "password1"
     )
     UserRole.create!(user: @user, role: @role) # 🔥 Asigna el rol correctamente
   end
