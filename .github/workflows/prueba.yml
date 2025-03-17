@@ -41,7 +41,8 @@ jobs:
 
       - name: 🗄️ Configurar base de datos
         run: |
-          bin/rails db:create db:schema:load --trace
+          bin/rails db:drop db:create db:migrate
+        
 
       - name: ✅ Ejecutar pruebas de sistema
         run: bin/rails test:system
