@@ -3,61 +3,53 @@ require "application_system_test_case"
 
 class CartTest < ApplicationSystemTestCase
   setup do
-    puts "Ejecutando setup..."
+    User.destroy_all
+    @role = Role.create!(name: "Cliente") # Crear rol
+    @user = User.create!(
+      email: "test@example.com",
+      password: "password1",
+      password_confirmation: "password1",
+      role_id: @role.id # Asignar el rol correctamente
+    )
+  end
 
-    # Crear categoría
-    @category = Category.create!(name: "Electrónica")
+  test "eliminar un producto del carrito" do
+    # Crear una categoría antes de crear el producto
+    categoria = Category.create!(name: "Electrónica")
 
-    # Crear producto
-    @product = Product.create!(
+    # Crear un producto con la categoría asociada
+    producto = Product.create!(
       name: "Laptop Gamer",
       description: "Una laptop potente para gaming",
       price: 1500.00,
       quantity: 10
     )
 
-    # Asociar categoría al producto
-    @product.categories << @category
-    puts "Categorías del producto: #{@product.categories.pluck(:name)}"
+    # Relacionar el producto con la categoría
+    producto.categories << categoria
 
-    # Verificar que el producto existe en la BD
-    puts "Productos en la BD: #{Product.count}"
-
-    # Crear imagen de prueba
+    # Crear un archivo temporal para la imagen
     file = Tempfile.new(["test_image", ".jpg"])
     file.binmode
-    file.write("\xFF\xD8\xFF")
+    file.write("\xFF\xD8\xFF") # Encabezado mínimo para que sea un archivo JPG válido
     file.rewind
 
-    @product.images.attach(
+    # Adjuntar la imagen temporal al producto
+    producto.images.attach(
       io: file,
       filename: "test_image.jpg",
       content_type: "image/jpeg"
     )
 
     file.close
-    file.unlink
-
-    # Crear usuario y rol
-    User.destroy_all
-    @role = Role.create!(name: "Cliente") 
-    @user = User.create!(
-      email: "test@example.com",
-      password: "password1",
-      password_confirmation: "password1",
-      role_id: @role.id
-    )
-
-    puts "Setup ejecutado correctamente"
-  end
-
-  test "eliminar un producto del carrito" do
+    file.unlink # Eliminar el archivo temporal después de adjuntarlo
+    
     visit new_user_session_path
     fill_in "Correo electrónico", with: @user.email
     fill_in "Contraseña", with: "password1"
     click_button "Iniciar sesión"
 
-    visit products_path
+    visit product_path(producto)
     assert_text "Laptop Gamer"
 
     click_button "Añadir al Carrito"
