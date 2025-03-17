@@ -3,7 +3,7 @@ require "application_system_test_case"
 
 class UsersTest < ApplicationSystemTestCase
     setup do
-        @role = Role.create!(name: "Customer")
+        @role = Role.create!(name: "Cliente")
         @user = User.create!(
           email: "user@example.com",
           username: "user1",
