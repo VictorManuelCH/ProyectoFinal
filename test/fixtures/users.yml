@@ -5,11 +5,11 @@ one:
   username: user1
   encrypted_password: password1
 
-
 two:
   email: user2@example.com
   username: user2
   encrypted_password: password2
+
 
 
 
