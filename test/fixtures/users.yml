@@ -7,7 +7,7 @@ one:
   role_id: 1  # Asegúrate de que el ID corresponde a un role existente
 
 two:
-  email: MyString
+  email: MyString2
   username: MyString
   encrypted_password: MyString
   role_id: 2  # Otro ID de rol válido
