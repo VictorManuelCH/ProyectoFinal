@@ -110,7 +110,7 @@ class CartTest < ApplicationSystemTestCase
     fill_in "quantity", with: 3
     click_button "Actualizar"
 
-    assert_text "Cantidad: 3"
+    assert_equal "3", find("input[name='quantity']").value
     assert_text "Total: $4500.00"
   end
 end
