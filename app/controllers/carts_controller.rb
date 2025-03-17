@@ -51,50 +51,27 @@ class CartsController < ApplicationController
       payment_method: PaymentMethod.first # Cambia según tus datos
     )
   
-    # if @payment.persisted?
-    #   # Reducir el inventario de cada producto en el carrito
-    #   @cart.cart_products.each do |cart_product|
-    #     product = cart_product.product
-  
-    #     # Verifica que haya suficiente cantidad y reduce el inventario
-    #     if product.quantity >= cart_product.quantity
-    #       product.update(quantity: product.quantity - cart_product.quantity)
-    #     else
-    #       # Si no hay suficiente stock, muestra un error
-    #       flash[:alert] = "No hay suficiente stock para algunos productos."
-    #       redirect_to cart_path and return
-    #     end
-    #   end
-
-    #   Rails.logger.debug "Redirigiendo a /cart/payment_confirmation"
-  
-    #   redirect_to payment_confirmation_cart_path, notice: 'Pago realizado correctamente.'
-    # else
-    #   redirect_to cart_path, alert: 'Hubo un problema al procesar el pago.'
-    # end
     if @payment.persisted?
-      # Primero verifica si hay suficiente stock en el carrito
+      # Reducir el inventario de cada producto en el carrito
       @cart.cart_products.each do |cart_product|
         product = cart_product.product
-    
-        if product.quantity < cart_product.quantity
+  
+        # Verifica que haya suficiente cantidad y reduce el inventario
+        if product.quantity >= cart_product.quantity
+          product.update(quantity: product.quantity - cart_product.quantity)
+        else
+          # Si no hay suficiente stock, muestra un error
           flash[:alert] = "No hay suficiente stock para algunos productos."
           redirect_to cart_path and return
         end
       end
-    
-      # Reducir el inventario de cada producto en el carrito si el stock es suficiente
-      @cart.cart_products.each do |cart_product|
-        product = cart_product.product
-        product.update(quantity: product.quantity - cart_product.quantity)
-      end
-    
+
       Rails.logger.debug "Redirigiendo a /cart/payment_confirmation"
+  
       redirect_to payment_confirmation_cart_path, notice: 'Pago realizado correctamente.'
     else
       redirect_to cart_path, alert: 'Hubo un problema al procesar el pago.'
     end
-    
   end
 
   # def checkout
