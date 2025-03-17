@@ -8,7 +8,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15  # Usa PostgreSQL 15 (o la versión que prefieras)
+        image: postgres:15  
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -44,6 +44,6 @@ jobs:
           bin/rails db:drop db:create db:migrate
         
 
-      - name: ✅ Ejecutar pruebas de sistema
-        run: bin/rails test:system
+      - name: ✅ Ejecutar pruebas (incluyendo System Tests)
+        run: bundle exec rails test test/system/test_registro_usuario.rb
         

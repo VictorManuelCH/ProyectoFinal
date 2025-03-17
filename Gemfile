@@ -10,6 +10,7 @@ gem 'ransack'
 gem 'bunny'
 gem 'sneakers'
 
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.8", ">= 7.0.8.7"
 
