@@ -16,9 +16,6 @@ class CheckoutTest < ApplicationSystemTestCase
       role_id: @role.id
     )
   
-    # Iniciar sesión con Devise (si lo usas)
-    login_as(@user, scope: :user) 
-  
     # Crear carrito asociado al usuario
     @cart = Cart.create!(user: @user)
   end
