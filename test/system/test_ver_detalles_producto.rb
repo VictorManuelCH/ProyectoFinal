@@ -17,6 +17,11 @@ class ProductDetailsTest < ApplicationSystemTestCase
       
       # Relacionar el producto con la categoría
       producto.categories << categoria
+
+      # Adjuntar una imagen ficticia si Active Storage está habilitado
+      producto.images.attach(io: File.open(Rails.root.join("test/fixtures/files/test_image.jpg")),
+                            filename: "test_image.jpg",
+                            content_type: "image/jpg")
   
       # Visitar la página del producto
       visit product_path(producto)
