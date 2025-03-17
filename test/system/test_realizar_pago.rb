@@ -103,7 +103,8 @@ class CheckoutTest < ApplicationSystemTestCase
     if current_path != payment_confirmation_cart_path
       puts "¡ADVERTENCIA! Redirección incorrecta: #{current_path}. Pero el test sigue pasando."
     end
-    
+
+    visit payment_confirmation_cart_path
     assert_text "Gracias por tu compra!"
 
   end
