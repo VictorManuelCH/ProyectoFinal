@@ -19,7 +19,6 @@ class CheckoutTest < ApplicationSystemTestCase
     # Crear carrito asociado al usuario
     @cart = Cart.create!(user: @user)
   end
-  
 
   test "un usuario puede proceder al pago desde el carrito" do
     # Crear una categoría antes de crear el producto
@@ -59,11 +58,11 @@ class CheckoutTest < ApplicationSystemTestCase
     click_button "Iniciar sesión"
 
     # Crear carrito asociado al usuario
-    @cart = current_user.cart
+    @cart = @user.cart # Aquí accedemos al carrito del usuario directamente, sin usar `current_user`
 
     # Busca o crea un pedido asociado al carrito
     order = @cart.order || Order.create(
-      user: current_user,
+      user: @user,
       cart: @cart,
       total_price: @cart.total_price
     )
@@ -82,6 +81,7 @@ class CheckoutTest < ApplicationSystemTestCase
     click_button "Añadir al Carrito"
 
     # Verificar que el producto esté en el carrito
+    visit cart_path
     assert_text "Mi carrito"
     assert_text "Laptop Gamer"
 
@@ -91,9 +91,7 @@ class CheckoutTest < ApplicationSystemTestCase
     puts current_url
 
     # Verificar que se redirige a la página de pago
-    visit payment_confirmation_cart_path
     assert_current_path payment_confirmation_cart_path
     assert_text "Gracias por tu compra!"
-
   end
 end
