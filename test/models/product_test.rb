@@ -6,6 +6,16 @@ class ProductTest < ActiveSupport::TestCase
     @product = Product.new(name: "Laptop", description: "Una laptop potente", price: 1500.0)
   end
 
+  # 📌 Test: La página principal carga correctamente
+  test "la página principal se muestra correctamente" do
+    visit root_path
+
+    assert_text "BIENVENIDO A NUESTRA TIENDA"
+    assert_text "Productos"
+    assert_text "Categorías"
+    assert_text @product_available.name
+  end
+
   # 📌 Test para crear un producto (Create)
   test "puede crear un producto" do
     product = Product.new(name: "Smartphone", description: "Teléfono inteligente", price: 500.0)
@@ -38,6 +48,16 @@ class ProductTest < ActiveSupport::TestCase
   # 📌 Test para validar la creación de un producto válido
   test "puede crear un producto válido" do
     assert @product.save, "El producto debería guardarse correctamente"
+  end
+
+  # 📌 Test: Un producto agotado muestra el mensaje correspondiente
+  test "producto agotado muestra mensaje y no permite añadir al carrito" do
+    visit root_path
+
+    within(".card", text: @product_out_of_stock.name) do
+      assert_text "Producto Agotado"
+      assert_no_selector "button", text: "Añadir al Carrito"
+    end
   end
 
   # 📌 Test para validar la presencia del nombre
