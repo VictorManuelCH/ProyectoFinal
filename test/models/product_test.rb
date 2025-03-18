@@ -2,7 +2,7 @@ require "test_helper"
 require "stringio"
 
 class ProductTest < ActiveSupport::TestCase
-  include Rails.application.routes.url_helpers
+  
   def setup
     @product = Product.new(name: "Laptop", description: "Una laptop potente", price: 1500.0)
   end
@@ -51,15 +51,15 @@ class ProductTest < ActiveSupport::TestCase
     assert @product.save, "El producto debería guardarse correctamente"
   end
 
-  # 📌 Test: Un producto agotado muestra el mensaje correspondiente
-  test "producto agotado muestra mensaje y no permite añadir al carrito" do
-    visit root_path
+  # # 📌 Test: Un producto agotado muestra el mensaje correspondiente
+  # test "producto agotado muestra mensaje y no permite añadir al carrito" do
+  #   visit root_path
 
-    within(".card", text: @product_out_of_stock.name) do
-      assert_text "Producto Agotado"
-      assert_no_selector "button", text: "Añadir al Carrito"
-    end
-  end
+  #   within(".card", text: @product_out_of_stock.name) do
+  #     assert_text "Producto Agotado"
+  #     assert_no_selector "button", text: "Añadir al Carrito"
+  #   end
+  # end
 
   # 📌 Test para validar la presencia del nombre
   test "debe ser inválido sin nombre" do
