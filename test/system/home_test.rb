@@ -45,13 +45,18 @@ class HomeTest < ApplicationSystemTestCase
   # 📌 Test: Un administrador puede ver los botones de agregar producto y categoría
   test "un administrador ve los botones de gestión" do
     User.destroy_all
-    @role = Role.create!(name: "administrador") # Crear rol
+    Role.destroy_all
+    UserRole.destroy_all
+  
+    @role = Role.create!(name: "Administrador") # Usa "Administrador" con mayúscula
+  
     @user = User.create!(
       email: "test@example.com",
       password: "password1",
-      password_confirmation: "password1",
-      role_id: @role.id # Asignar el rol correctamente
+      password_confirmation: "password1"
     )
+  
+    UserRole.create!(user: @user, role: @role) # Asignar rol a través de la tabla intermedia
   
     visit new_user_session_path
   
@@ -62,6 +67,7 @@ class HomeTest < ApplicationSystemTestCase
     assert_text "Añadir Producto"
     assert_text "Añadir Categoría"
   end
+  
   
 
   # 📌 Test: Un cliente no puede ver los botones de agregar producto
