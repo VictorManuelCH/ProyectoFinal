@@ -1,6 +1,9 @@
 require "application_system_test_case"
 
 class HomeTest < ApplicationSystemTestCase
+
+  include Warden::Test::Helpers
+
   
   setup do
     User.destroy_all
