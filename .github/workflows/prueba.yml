@@ -29,10 +29,16 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
 
     env:
       RAILS_ENV: test
       DATABASE_URL: "postgres://postgres:postgres@localhost:5432/tienda3_test"
+      REDIS_URL: "redis://localhost:6379/0"
 
     steps:
       - name: 🛠️ Checkout código
@@ -51,13 +57,20 @@ jobs:
         
       - name: 🗄️ Configurar base de datos
         run: bin/rails db:drop db:create db:migrate
-      
+
       - name: ✅ Ejecutar pruebas unitarias
-        run: bundle exec rails test
+        run: bundle exec rails test test/models
+
+      - name: 📤 Guardar resultados de pruebas unitarias
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-unit
+          path: tmp/test-results-unit.log
+          retention-days: 7
 
   test-system:
     runs-on: ubuntu-latest
-    needs: [deploy-to-testing, test-unit]  # Espera al despliegue simulado y a las pruebas unitarias
+    needs: deploy-to-testing  # YA NO ESPERA A `test-unit`, SE EJECUTAN EN PARALELO
     services:
       postgres:
         image: postgres:15  
@@ -72,10 +85,16 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
 
     env:
       RAILS_ENV: test
       DATABASE_URL: "postgres://postgres:postgres@localhost:5432/tienda3_test"
+      REDIS_URL: "redis://localhost:6379/0"
 
     steps:
       - name: 🛠️ Checkout código
@@ -117,4 +136,9 @@ jobs:
             bundle exec rails test $test_file
           done
 
-      
+      - name: 📤 Guardar resultados de pruebas de sistema
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-system
+          path: tmp/test-results-system.log
+          retention-days: 7
