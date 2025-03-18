@@ -7,16 +7,6 @@ class ProductTest < ActiveSupport::TestCase
     @product = Product.new(name: "Laptop", description: "Una laptop potente", price: 1500.0)
   end
 
-  # # 📌 Test: La página principal carga correctamente
-  # test "la página principal se muestra correctamente" do
-  #   visit root_path
-
-  #   assert_text "BIENVENIDO A NUESTRA TIENDA"
-  #   assert_text "Productos"
-  #   assert_text "Categorías"
-  #   assert_text @product_available.name
-  # end
-
   # 📌 Test para crear un producto (Create)
   test "puede crear un producto" do
     product = Product.new(name: "Smartphone", description: "Teléfono inteligente", price: 500.0)
@@ -51,16 +41,6 @@ class ProductTest < ActiveSupport::TestCase
     assert @product.save, "El producto debería guardarse correctamente"
   end
 
-  # # 📌 Test: Un producto agotado muestra el mensaje correspondiente
-  # test "producto agotado muestra mensaje y no permite añadir al carrito" do
-  #   visit root_path
-
-  #   within(".card", text: @product_out_of_stock.name) do
-  #     assert_text "Producto Agotado"
-  #     assert_no_selector "button", text: "Añadir al Carrito"
-  #   end
-  # end
-
   # 📌 Test para validar la presencia del nombre
   test "debe ser inválido sin nombre" do
     @product.name = nil
@@ -91,13 +71,4 @@ class ProductTest < ActiveSupport::TestCase
     assert product.images.attached?, "El producto debería tener imágenes adjuntas"
   end
 
-
-  # # 📌 Test para validar la búsqueda con Ransack
-  # test "ransack permite buscar por nombre, descripción y precio" do
-  #   allowed_attributes = Product.ransackable_attributes
-  #   assert_includes allowed_attributes, "name"
-  #   assert_includes allowed_attributes, "description"
-  #   assert_includes allowed_attributes, "price"
-  #   assert_not_includes allowed_attributes, "created_at", "Ransack no debería permitir búsqueda por created_at"
-  # end
 end
