@@ -58,8 +58,13 @@ jobs:
       - name: 🗄️ Configurar base de datos
         run: bin/rails db:drop db:create db:migrate
 
+      # - name: ✅ Ejecutar pruebas unitarias
+      #   run: bundle exec rails test test/models
+
       - name: ✅ Ejecutar pruebas unitarias
-        run: bundle exec rails test test/models
+        run: |
+          mkdir -p tmp
+          bundle exec rails test | tee tmp/test-results-unit.log      
 
       - name: 📤 Guardar resultados de pruebas unitarias
         uses: actions/upload-artifact@v4
@@ -129,12 +134,21 @@ jobs:
       - name: 🗄️ Configurar base de datos
         run: bin/rails db:drop db:create db:migrate
       
+      # - name: ✅ Ejecutar pruebas de sistema individualmente
+      #   run: |
+      #     for test_file in $(find test/system -name "*.rb"); do
+      #       echo "Ejecutando: $test_file"
+      #       bundle exec rails test $test_file
+      #     done
+
       - name: ✅ Ejecutar pruebas de sistema individualmente
         run: |
+          mkdir -p tmp
           for test_file in $(find test/system -name "*.rb"); do
             echo "Ejecutando: $test_file"
-            bundle exec rails test $test_file
+            bundle exec rails test $test_file | tee -a tmp/test-results-system.log
           done
+        
 
       - name: 📤 Guardar resultados de pruebas de sistema
         uses: actions/upload-artifact@v4
