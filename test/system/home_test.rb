@@ -24,8 +24,9 @@ class HomeTest < ApplicationSystemTestCase
       role_id: @role_customer.id
     )
 
-    @product_available = Product.create!(name: "Laptop", price: 1000, stock: 10)
-    @product_out_of_stock = Product.create!(name: "Tablet", price: 500, stock: 0)
+    @product_available = Product.create!(name: "Laptop", price: 1000, quantity: 10)
+    @product_out_of_stock = Product.create!(name: "Tablet", price: 500, quantity: 0)
+
   end
 
   # 📌 Test: La página principal carga correctamente
