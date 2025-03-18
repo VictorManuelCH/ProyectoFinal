@@ -5,14 +5,14 @@ class CartTest < ActiveSupport::TestCase
   test "puede crear un carrito" do
     role = Role.create!(name: "customer")
     user = User.create!(email: "test@example.com", password: "password", role_id: role.id)
-    cart = Cart.create!(user: user) # Esta línea es suficiente
+    cart = Cart.create!(user: user) 
     assert cart.persisted?, "El carrito debería guardarse correctamente"
   end
   
   # Test para leer un carrito
   test "puede encontrar un carrito" do
-    role = Role.create!(name: "customer") # Si tienes un modelo Role
-    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) # Asigna un role_id
+    role = Role.create!(name: "customer") 
+    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) 
     cart = Cart.create!(user: user)
     encontrado = Cart.find_by(id: cart.id)
     assert_equal cart, encontrado, "El carrito debería encontrarse correctamente"
@@ -25,14 +25,14 @@ class CartTest < ActiveSupport::TestCase
     cart = Cart.create!(user: user)
     otro_usuario = User.create!(email: "otro@example.com", password: "password", role_id: role.id)
   
-    cart.update!(user: otro_usuario)  # Usamos otro usuario en lugar de user_id: 1
+    cart.update!(user: otro_usuario)  
     assert_equal otro_usuario.id, cart.reload.user_id, "El user_id del carrito debería actualizarse correctamente"
   end  
 
   # Test para eliminar un carrito
   test "puede eliminar un carrito" do
-    role = Role.create!(name: "customer") # Si tienes un modelo Role
-    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) # Asigna un role_id
+    role = Role.create!(name: "customer") 
+    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) 
     cart = Cart.create!(user: user)
     cart_id = cart.id
     cart.destroy
@@ -41,16 +41,16 @@ class CartTest < ActiveSupport::TestCase
 
   # Test para verificar que un carrito vacío tiene total 0
   test "debe devolver total 0 si el carrito está vacío" do
-    role = Role.create!(name: "customer") # Si tienes un modelo Role
-    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) # Asigna un role_id
+    role = Role.create!(name: "customer") 
+    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) 
     cart = Cart.create!(user: user)
     assert_equal 0, cart.total_price, "El total de un carrito vacío debe ser 0"
   end
 
   # Test para asegurarse de que un carrito puede tener productos
   test "puede contener productos" do
-    role = Role.create!(name: "customer") # Si tienes un modelo Role
-    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) # Asigna un role_id
+    role = Role.create!(name: "customer") 
+    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) 
     cart = Cart.create!(user: user)
     product = Product.create!(name: "Producto", price: 20.0, quantity: 10)
 
@@ -62,8 +62,8 @@ class CartTest < ActiveSupport::TestCase
 
   # Test para verificar que la cantidad del producto en el carrito es la correcta
   test "cantidad del producto en el carrito es correcta" do
-    role = Role.create!(name: "customer") # Si tienes un modelo Role
-    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) # Asigna un role_id
+    role = Role.create!(name: "customer") 
+    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) 
     cart = Cart.create!(user: user)
     product = Product.create(name: "Producto", price: 50.0, quantity: 10)
 
@@ -74,8 +74,8 @@ class CartTest < ActiveSupport::TestCase
 
   # Test para verificar la eliminación de productos en el carrito
   test "debe eliminar productos cuando se elimina el carrito" do
-    role = Role.create!(name: "customer") # Si tienes un modelo Role
-    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) # Asigna un role_id
+    role = Role.create!(name: "customer") 
+    user = User.create!(email: "test@example.com", password: "password", role_id: role.id) 
     cart = Cart.create!(user: user)
     product = Product.create(name: "Producto", price: 30.0, quantity: 5)
 
