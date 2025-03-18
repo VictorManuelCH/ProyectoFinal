@@ -9,12 +9,9 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          DB_NAME: tienda3_test
-          DB_USERNAME: postgres
-          DB_PASSWORD: postgres
-          DB_HOST: localhost
-          DB_PORT: 5432
-
+          POSTGRES_DB: tienda3_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
