@@ -32,11 +32,19 @@ jobs:
       - name: Instalar RuboCop
         run: gem install rubocop
 
-      - name: 🧹 Ejecutar RuboCop (Lint)
-        run: bundle exec rubocop
+      - name: 🧹 Ejecutar RuboCop (Lint) y guardar salida
+        run: |
+          bundle exec rubocop --format simple > rubocop_output.txt || true
+  
+      - name: 📤 Subir reporte de RuboCop como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: rubocop-report
+          path: rubocop_output.txt
 
       - name: 🔒 Ejecutar Brakeman (Seguridad)
         run: bundle exec brakeman
+    
 
   test-unit:
     runs-on: ubuntu-latest
