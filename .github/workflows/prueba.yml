@@ -9,9 +9,12 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: tienda3_test
+          DB_NAME: tienda3_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_PORT: 5432
+
         ports:
           - 5432:5432
         options: >-
@@ -108,4 +111,3 @@ jobs:
           name: test-results-system
           path: tmp/test-results-system.log
           retention-days: 7
-
