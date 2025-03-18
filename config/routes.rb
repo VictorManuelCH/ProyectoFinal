@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   root 'home#index'
 
@@ -12,7 +14,7 @@ Rails.application.routes.draw do
   resources :user_addresses
   resources :user_roles
   resources :reports
-  resource :cart, only: [:show, :destroy] do
+  resource :cart, only: %i[show destroy] do
     post 'add_product/:product_id', to: 'carts#add_product', as: 'add_product'
     post 'update_quantity/:product_id', to: 'carts#update_quantity', as: 'update_quantity'
     post 'remove_product/:product_id', to: 'carts#remove_product', as: 'remove_product'
@@ -20,21 +22,19 @@ Rails.application.routes.draw do
     delete 'remove2/:product_id', to: 'carts#remove_product2', as: 'remove_product2'
     patch 'update_quantity2/:product_id', to: 'carts#update_quantity2', as: 'update_quantity2'
     # Rutas para el pago
-    post 'checkout', to: 'carts#checkout', as: 'checkout_post' 
+    post 'checkout', to: 'carts#checkout', as: 'checkout_post'
     get 'checkout', to: 'carts#checkout', as: 'checkout'
     get 'payment_confirmation', to: 'carts#payment_confirmation', as: 'payment_confirmation'
   end
-  #get 'cart/payment_method/:cart_id', to: 'payment_methods#new', as: 'payment_method_cart'
-  
+  # get 'cart/payment_method/:cart_id', to: 'payment_methods#new', as: 'payment_method_cart'
+
   resources :products
   resources :orders
   resources :users
   resources :categories
   # En config/routes.rb
 
-  resources :payment_methods#, only: [:index, :create]
-
-
+  resources :payment_methods # , only: [:index, :create]
 
   # Otras rutas necesarias
 

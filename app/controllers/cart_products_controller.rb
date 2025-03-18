@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class CartProductsController < ApplicationController
-  before_action :set_cart_product, only: %i[ show edit update destroy ]
+  before_action :set_cart_product, only: %i[show edit update destroy]
 
   # GET /cart_products or /cart_products.json
   def index
@@ -7,8 +9,7 @@ class CartProductsController < ApplicationController
   end
 
   # GET /cart_products/1 or /cart_products/1.json
-  def show
-  end
+  def show; end
 
   # GET /cart_products/new
   def new
@@ -16,8 +17,7 @@ class CartProductsController < ApplicationController
   end
 
   # GET /cart_products/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /cart_products or /cart_products.json
   def create
@@ -25,7 +25,7 @@ class CartProductsController < ApplicationController
 
     respond_to do |format|
       if @cart_product.save
-        format.html { redirect_to @cart_product, notice: "Cart product was successfully created." }
+        format.html { redirect_to @cart_product, notice: 'Cart product was successfully created.' }
         format.json { render :show, status: :created, location: @cart_product }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class CartProductsController < ApplicationController
   def update
     respond_to do |format|
       if @cart_product.update(cart_product_params)
-        format.html { redirect_to @cart_product, notice: "Cart product was successfully updated." }
+        format.html { redirect_to @cart_product, notice: 'Cart product was successfully updated.' }
         format.json { render :show, status: :ok, location: @cart_product }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +52,22 @@ class CartProductsController < ApplicationController
     @cart_product.destroy
 
     respond_to do |format|
-      format.html { redirect_to cart_products_path, status: :see_other, notice: "Cart product was successfully destroyed." }
+      format.html do
+        redirect_to cart_products_path, status: :see_other, notice: 'Cart product was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_cart_product
-      @cart_product = CartProduct.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def cart_product_params
-      params.require(:cart_product).permit(:cart_id, :product_id, :quantity)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_cart_product
+    @cart_product = CartProduct.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def cart_product_params
+    params.require(:cart_product).permit(:cart_id, :product_id, :quantity)
+  end
 end

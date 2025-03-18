@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ProductCategoriesController < ApplicationController
-  before_action :set_product_category, only: %i[ show edit update destroy ]
+  before_action :set_product_category, only: %i[show edit update destroy]
 
   # GET /product_categories or /product_categories.json
   def index
@@ -7,8 +9,7 @@ class ProductCategoriesController < ApplicationController
   end
 
   # GET /product_categories/1 or /product_categories/1.json
-  def show
-  end
+  def show; end
 
   # GET /product_categories/new
   def new
@@ -16,8 +17,7 @@ class ProductCategoriesController < ApplicationController
   end
 
   # GET /product_categories/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /product_categories or /product_categories.json
   def create
@@ -25,7 +25,7 @@ class ProductCategoriesController < ApplicationController
 
     respond_to do |format|
       if @product_category.save
-        format.html { redirect_to @product_category, notice: "Product category was successfully created." }
+        format.html { redirect_to @product_category, notice: 'Product category was successfully created.' }
         format.json { render :show, status: :created, location: @product_category }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class ProductCategoriesController < ApplicationController
   def update
     respond_to do |format|
       if @product_category.update(product_category_params)
-        format.html { redirect_to @product_category, notice: "Product category was successfully updated." }
+        format.html { redirect_to @product_category, notice: 'Product category was successfully updated.' }
         format.json { render :show, status: :ok, location: @product_category }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +52,22 @@ class ProductCategoriesController < ApplicationController
     @product_category.destroy
 
     respond_to do |format|
-      format.html { redirect_to product_categories_path, status: :see_other, notice: "Product category was successfully destroyed." }
+      format.html do
+        redirect_to product_categories_path, status: :see_other, notice: 'Product category was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product_category
-      @product_category = ProductCategory.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def product_category_params
-      params.require(:product_category).permit(:product_id, :category_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_product_category
+    @product_category = ProductCategory.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def product_category_params
+    params.require(:product_category).permit(:product_id, :category_id)
+  end
 end

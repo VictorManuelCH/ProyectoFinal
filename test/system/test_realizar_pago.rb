@@ -1,34 +1,35 @@
-require "test_helper"
-require "application_system_test_case"
+# frozen_string_literal: true
+
+require 'test_helper'
+require 'application_system_test_case'
 
 class CheckoutTest < ApplicationSystemTestCase
   setup do
     User.destroy_all
-    
+
     # Crear rol
-    @role = Role.create!(name: "Cliente") 
-    
+    @role = Role.create!(name: 'Cliente')
+
     # Crear usuario con rol
     @user = User.create!(
-      email: "test@example.com",
-      password: "password1",
-      password_confirmation: "password1",
+      email: 'test@example.com',
+      password: 'password1',
+      password_confirmation: 'password1',
       role_id: @role.id
     )
-  
+
     # Crear carrito asociado al usuario
     @cart = Cart.create!(user: @user)
   end
-  
 
-  test "un usuario puede proceder al pago desde el carrito" do
+  test 'un usuario puede proceder al pago desde el carrito' do
     # Crear una categoría antes de crear el producto
-    categoria = Category.create!(name: "Electrónica")
+    categoria = Category.create!(name: 'Electrónica')
 
     # Crear un producto con la categoría asociada
     producto = Product.create!(
-      name: "Laptop Gamer",
-      description: "Una laptop potente para gaming",
+      name: 'Laptop Gamer',
+      description: 'Una laptop potente para gaming',
       price: 1500.00,
       quantity: 10
     )
@@ -37,7 +38,7 @@ class CheckoutTest < ApplicationSystemTestCase
     producto.categories << categoria
 
     # Crear un archivo temporal para la imagen
-    file = Tempfile.new(["test_image", ".jpg"])
+    file = Tempfile.new(['test_image', '.jpg'])
     file.binmode
     file.write("\xFF\xD8\xFF") # Encabezado mínimo para que sea un archivo JPG válido
     file.rewind
@@ -45,8 +46,8 @@ class CheckoutTest < ApplicationSystemTestCase
     # Adjuntar la imagen temporal al producto
     producto.images.attach(
       io: file,
-      filename: "test_image.jpg",
-      content_type: "image/jpeg"
+      filename: 'test_image.jpg',
+      content_type: 'image/jpeg'
     )
 
     file.close
@@ -54,9 +55,9 @@ class CheckoutTest < ApplicationSystemTestCase
 
     # Iniciar sesión
     visit new_user_session_path
-    fill_in "Correo electrónico", with: @user.email
-    fill_in "Contraseña", with: "password1"
-    click_button "Iniciar sesión"
+    fill_in 'Correo electrónico', with: @user.email
+    fill_in 'Contraseña', with: 'password1'
+    click_button 'Iniciar sesión'
 
     # Crear carrito asociado al usuario
     @cart = Cart.create!(user: @user)
@@ -87,15 +88,15 @@ class CheckoutTest < ApplicationSystemTestCase
 
     # Visitar productos y agregar uno al carrito
     visit product_path(producto)
-    assert_text "Laptop Gamer"
-    click_button "Añadir al Carrito"
+    assert_text 'Laptop Gamer'
+    click_button 'Añadir al Carrito'
 
     # Verificar que el producto esté en el carrito
-    assert_text "Mi carrito"
-    assert_text "Laptop Gamer"
+    assert_text 'Mi carrito'
+    assert_text 'Laptop Gamer'
 
     # Hacer clic en "Proceder a Pagar"
-    click_link "Proceder a Pagar"
+    click_link 'Proceder a Pagar'
 
     puts current_url
 
@@ -104,7 +105,6 @@ class CheckoutTest < ApplicationSystemTestCase
       puts "¡ADVERTENCIA! Redirección incorrecta: #{current_path}. Pero el test sigue pasando."
     end
 
-    assert_text "Gracias por tu compra!"
-
+    assert_text 'Gracias por tu compra!'
   end
 end

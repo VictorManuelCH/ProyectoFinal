@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class UserAddressesController < ApplicationController
-  before_action :set_user_address, only: %i[ show edit update destroy ]
+  before_action :set_user_address, only: %i[show edit update destroy]
 
   # GET /user_addresses or /user_addresses.json
   def index
@@ -7,8 +9,7 @@ class UserAddressesController < ApplicationController
   end
 
   # GET /user_addresses/1 or /user_addresses/1.json
-  def show
-  end
+  def show; end
 
   # GET /user_addresses/new
   def new
@@ -16,8 +17,7 @@ class UserAddressesController < ApplicationController
   end
 
   # GET /user_addresses/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /user_addresses or /user_addresses.json
   def create
@@ -25,7 +25,7 @@ class UserAddressesController < ApplicationController
 
     respond_to do |format|
       if @user_address.save
-        format.html { redirect_to @user_address, notice: "User address was successfully created." }
+        format.html { redirect_to @user_address, notice: 'User address was successfully created.' }
         format.json { render :show, status: :created, location: @user_address }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class UserAddressesController < ApplicationController
   def update
     respond_to do |format|
       if @user_address.update(user_address_params)
-        format.html { redirect_to @user_address, notice: "User address was successfully updated." }
+        format.html { redirect_to @user_address, notice: 'User address was successfully updated.' }
         format.json { render :show, status: :ok, location: @user_address }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +52,23 @@ class UserAddressesController < ApplicationController
     @user_address.destroy
 
     respond_to do |format|
-      format.html { redirect_to user_addresses_path, status: :see_other, notice: "User address was successfully destroyed." }
+      format.html do
+        redirect_to user_addresses_path, status: :see_other, notice: 'User address was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user_address
-      @user_address = UserAddress.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_address_params
-      params.require(:user_address).permit(:user_id, :address_line1, :address_line2, :city, :state, :postal_code, :country)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user_address
+    @user_address = UserAddress.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def user_address_params
+    params.require(:user_address).permit(:user_id, :address_line1, :address_line2, :city, :state, :postal_code,
+                                         :country)
+  end
 end

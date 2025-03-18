@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class PaymentStatesController < ApplicationController
-  before_action :set_payment_state, only: %i[ show edit update destroy ]
+  before_action :set_payment_state, only: %i[show edit update destroy]
 
   # GET /payment_states or /payment_states.json
   def index
@@ -7,8 +9,7 @@ class PaymentStatesController < ApplicationController
   end
 
   # GET /payment_states/1 or /payment_states/1.json
-  def show
-  end
+  def show; end
 
   # GET /payment_states/new
   def new
@@ -16,8 +17,7 @@ class PaymentStatesController < ApplicationController
   end
 
   # GET /payment_states/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /payment_states or /payment_states.json
   def create
@@ -25,7 +25,7 @@ class PaymentStatesController < ApplicationController
 
     respond_to do |format|
       if @payment_state.save
-        format.html { redirect_to @payment_state, notice: "Payment state was successfully created." }
+        format.html { redirect_to @payment_state, notice: 'Payment state was successfully created.' }
         format.json { render :show, status: :created, location: @payment_state }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class PaymentStatesController < ApplicationController
   def update
     respond_to do |format|
       if @payment_state.update(payment_state_params)
-        format.html { redirect_to @payment_state, notice: "Payment state was successfully updated." }
+        format.html { redirect_to @payment_state, notice: 'Payment state was successfully updated.' }
         format.json { render :show, status: :ok, location: @payment_state }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +52,22 @@ class PaymentStatesController < ApplicationController
     @payment_state.destroy
 
     respond_to do |format|
-      format.html { redirect_to payment_states_path, status: :see_other, notice: "Payment state was successfully destroyed." }
+      format.html do
+        redirect_to payment_states_path, status: :see_other, notice: 'Payment state was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_payment_state
-      @payment_state = PaymentState.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def payment_state_params
-      params.require(:payment_state).permit(:name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_payment_state
+    @payment_state = PaymentState.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def payment_state_params
+    params.require(:payment_state).permit(:name)
+  end
 end

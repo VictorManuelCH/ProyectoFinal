@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class OrderStatesController < ApplicationController
-  before_action :set_order_state, only: %i[ show edit update destroy ]
+  before_action :set_order_state, only: %i[show edit update destroy]
 
   # GET /order_states or /order_states.json
   def index
@@ -7,8 +9,7 @@ class OrderStatesController < ApplicationController
   end
 
   # GET /order_states/1 or /order_states/1.json
-  def show
-  end
+  def show; end
 
   # GET /order_states/new
   def new
@@ -16,8 +17,7 @@ class OrderStatesController < ApplicationController
   end
 
   # GET /order_states/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /order_states or /order_states.json
   def create
@@ -25,7 +25,7 @@ class OrderStatesController < ApplicationController
 
     respond_to do |format|
       if @order_state.save
-        format.html { redirect_to @order_state, notice: "Order state was successfully created." }
+        format.html { redirect_to @order_state, notice: 'Order state was successfully created.' }
         format.json { render :show, status: :created, location: @order_state }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +38,7 @@ class OrderStatesController < ApplicationController
   def update
     respond_to do |format|
       if @order_state.update(order_state_params)
-        format.html { redirect_to @order_state, notice: "Order state was successfully updated." }
+        format.html { redirect_to @order_state, notice: 'Order state was successfully updated.' }
         format.json { render :show, status: :ok, location: @order_state }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +52,22 @@ class OrderStatesController < ApplicationController
     @order_state.destroy
 
     respond_to do |format|
-      format.html { redirect_to order_states_path, status: :see_other, notice: "Order state was successfully destroyed." }
+      format.html do
+        redirect_to order_states_path, status: :see_other, notice: 'Order state was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order_state
-      @order_state = OrderState.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def order_state_params
-      params.require(:order_state).permit(:order_id, :state_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_order_state
+    @order_state = OrderState.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def order_state_params
+    params.require(:order_state).permit(:order_id, :state_id)
+  end
 end

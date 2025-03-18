@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   after_create :create_cart
   # Include default devise modules. Others available are:
@@ -5,7 +7,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  
   has_many :orders, dependent: :destroy
   has_one :cart, dependent: :destroy
   has_many :user_role
