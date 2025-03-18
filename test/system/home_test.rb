@@ -55,7 +55,7 @@ class HomeTest < ApplicationSystemTestCase
   
     visit new_user_session_path
   
-    fill_in "Correo electrónico", with: user.email
+    fill_in "Correo electrónico", with: @user.email
     fill_in "Contraseña", with: "password1"
     click_button "Iniciar sesión"
   
