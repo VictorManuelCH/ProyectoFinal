@@ -45,21 +45,13 @@ class HomeTest < ApplicationSystemTestCase
   # 📌 Test: Un administrador puede ver los botones de agregar producto y categoría
   test "un administrador ve los botones de gestión" do
     User.destroy_all
-    Role.destroy_all  # Asegurarte de que los roles anteriores no interfieran
-    UserRole.destroy_all
-  
-    # Crear el rol de Administrador
-    admin_role = Role.create!(name: "Administrador") 
-  
-    # Crear el usuario y asignarle el rol correctamente
-    user = User.create!(
+    @role = Role.create!(name: "Cliente") # Crear rol
+    @user = User.create!(
       email: "test@example.com",
       password: "password1",
-      password_confirmation: "password1"
+      password_confirmation: "password1",
+      role_id: @role.id # Asignar el rol correctamente
     )
-  
-    # Asociar el usuario con el rol de Administrador
-    UserRole.create!(user: user, role: admin_role)
   
     visit new_user_session_path
   
