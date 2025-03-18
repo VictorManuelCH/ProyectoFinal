@@ -44,12 +44,25 @@ class HomeTest < ApplicationSystemTestCase
 
   # 📌 Test: Un administrador puede ver los botones de agregar producto y categoría
   test "un administrador ve los botones de gestión" do
-    login_as(@admin, scope: :user) # Devise helper para iniciar sesión
+    @role = Role.find_or_create_by!(name: "Administrador")
+    @user = User.create!(
+      email: "test@example.com",
+      password: "password1",
+      password_confirmation: "password1",
+      role: @role
+    )
+  
+    visit new_user_session_path
+    fill_in "Correo electrónico", with: @user.email
+    fill_in "Contraseña", with: "password1"
+    click_button "Iniciar sesión"
+  
     visit root_path
-
+  
     assert_selector "a", text: "Añadir Producto"
     assert_selector "a", text: "Añadir Categoría"
   end
+  
 
   # 📌 Test: Un cliente no puede ver los botones de agregar producto
   test "un cliente no ve los botones de gestión" do
