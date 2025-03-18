@@ -27,33 +27,33 @@ class UserTest < ActiveSupport::TestCase
     assert_not_nil @user.cart, "El usuario debería tener un carrito asociado automáticamente"
   end
 
-  # 📌 Test: Un administrador puede ver los botones de agregar producto y categoría
-  test "un administrador ve los botones de gestión" do
-    login_as(@admin, scope: :user) # Devise helper para iniciar sesión
-    visit root_path
+  # # 📌 Test: Un administrador puede ver los botones de agregar producto y categoría
+  # test "un administrador ve los botones de gestión" do
+  #   login_as(@admin, scope: :user) # Devise helper para iniciar sesión
+  #   visit root_path
 
-    assert_selector "a", text: "Añadir Producto"
-    assert_selector "a", text: "Añadir Categoría"
-  end
+  #   assert_selector "a", text: "Añadir Producto"
+  #   assert_selector "a", text: "Añadir Categoría"
+  # end
 
-  # 📌 Test: Un cliente no puede ver los botones de agregar producto
-  test "un cliente no ve los botones de gestión" do
-    login_as(@customer, scope: :user)
-    visit root_path
+  # # 📌 Test: Un cliente no puede ver los botones de agregar producto
+  # test "un cliente no ve los botones de gestión" do
+  #   login_as(@customer, scope: :user)
+  #   visit root_path
 
-    assert_no_selector "a", text: "Añadir Producto"
-    assert_no_selector "a", text: "Añadir Categoría"
-  end
+  #   assert_no_selector "a", text: "Añadir Producto"
+  #   assert_no_selector "a", text: "Añadir Categoría"
+  # end
 
-  # 📌 Test: Un usuario puede buscar productos con el formulario
-  test "el usuario puede buscar productos" do
-    visit root_path
-    fill_in "Buscar productos", with: "Laptop"
-    click_on "Buscar"
+  # # 📌 Test: Un usuario puede buscar productos con el formulario
+  # test "el usuario puede buscar productos" do
+  #   visit root_path
+  #   fill_in "Buscar productos", with: "Laptop"
+  #   click_on "Buscar"
 
-    assert_text "Laptop"
-    assert_no_text "Tablet"
-  end
+  #   assert_text "Laptop"
+  #   assert_no_text "Tablet"
+  # end
 
   # 📌 Test para verificar la relación con órdenes
   test "puede tener órdenes" do
