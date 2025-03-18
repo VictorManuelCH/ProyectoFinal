@@ -47,11 +47,15 @@ class UserTest < ActiveSupport::TestCase
 
   # 📌 Test para verificar la relación con órdenes
   test "puede tener órdenes" do
-    user = User.create!(email: "test@example.com", password: "password", role_id: Role.create!(name: "Cliente").id)
-    order = Order.create!(user: user)
+    role = Role.create!(name: "Cliente")
+    user = User.create!(email: "test@example.com", password: "password", role_id: role.id)
+  
+    cart = Cart.create!(user: user)  # 🔹 Se crea el carrito antes de la orden
+    order = Order.create!(user: user, cart: cart)  # 🔹 Se asocia el carrito a la orden
     
     assert_includes user.orders, order, "El usuario debería tener órdenes asociadas"
   end
+  
 
   # 📌 Test para verificar la relación con roles
   test "puede tener múltiples roles" do
