@@ -49,7 +49,7 @@ class HomeTest < ApplicationSystemTestCase
       email: "test@example.com",
       password: "password1",
       password_confirmation: "password1",
-      role: @role
+      role_id: @role.id # Cambiado a role_id
     )
   
     visit new_user_session_path
@@ -62,7 +62,7 @@ class HomeTest < ApplicationSystemTestCase
     assert_selector "a", text: "Añadir Producto"
     assert_selector "a", text: "Añadir Categoría"
   end
-  
+
 
   # 📌 Test: Un cliente no puede ver los botones de agregar producto
   test "un cliente no ve los botones de gestión" do
