@@ -48,17 +48,17 @@ class HomeTest < ApplicationSystemTestCase
     Role.destroy_all
     UserRole.destroy_all
   
-    # Crear el rol de Administrador
-    admin_role = Role.create!(name: "Administrador") 
+    # Crear rol de Administrador
+    admin_role = Role.create!(name: "Administrador")
   
-    # Crear el usuario sin rol_id
+    # Crear usuario sin `role_id`
     @user = User.create!(
       email: "test@example.com",
       password: "password1",
       password_confirmation: "password1"
     )
   
-    # Asociar el usuario con el rol de Administrador
+    # Asignar el rol al usuario a través de la tabla intermedia
     UserRole.create!(user: @user, role: admin_role)
   
     visit new_user_session_path
@@ -67,7 +67,7 @@ class HomeTest < ApplicationSystemTestCase
     fill_in "Contraseña", with: "password1"
     click_button "Iniciar sesión"
   
-    # Verificar que el usuario tiene el rol correctamente
+    # Verificar que el usuario tiene el rol de Administrador
     assert @user.reload.administrador?, "El usuario no tiene el rol de Administrador"
   
     assert_text "Añadir Producto"
