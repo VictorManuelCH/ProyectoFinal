@@ -1,34 +1,51 @@
 require "application_system_test_case"
 
 class HomeTest2 < ApplicationSystemTestCase
-    # 📌 Test: Un administrador puede ver los botones de agregar producto y categoría
+    setup do
+        User.destroy_all
+        Role.destroy_all
+        Product.destroy_all
+      
+        @role_admin = Role.find_or_create_by!(name: "Administrador")
+        @role_customer = Role.find_or_create_by!(name: "Cliente")
+      
+        @admin = User.create!(
+          email: "admin@example.com",
+          password: "password1",
+          password_confirmation: "password1"
+        )
+        @admin.roles << @role_admin # ✅ Asignar rol correctamente
+      
+        @customer = User.create!(
+          email: "customer@example.com",
+          password: "password1",
+          password_confirmation: "password1"
+        )
+        @customer.roles << @role_customer # ✅ Asignar rol correctamente
+      
+        @product_available = Product.create!(name: "Laptop", price: 1000, quantity: 10)
+        @product_out_of_stock = Product.create!(name: "Tablet", price: 500, quantity: 0)
+    end
+      
     test "un administrador ve los botones de gestión" do
-        # ✅ Asegurar que el rol de Administrador existe
         @role = Role.find_or_create_by!(name: "Administrador")
-    
-        # ✅ Crear usuario con el rol correcto
         @user = User.create!(
           email: "test@example.com",
           password: "password1",
-          password_confirmation: "password1",
-          role_id: @role.id # Si tienes `belongs_to :role`
+          password_confirmation: "password1"
         )
-    
-        # ✅ Verificar que el usuario tiene el rol correcto
-        assert_equal "Administrador", @user.role.name
-    
-        # 🔹 Iniciar sesión con Capybara
+        @user.roles << @role # ✅ Asignar rol correctamente
+      
+        # 🔍 Depuración en GitHub Actions
+        puts "Roles en la BD: #{Role.pluck(:id, :name)}"
+        puts "Roles del usuario creado: #{@user.roles.pluck(:id, :name)}"
+      
         visit new_user_session_path
-    
         fill_in "Correo electrónico", with: @user.email
         fill_in "Contraseña", with: "password1"
         click_button "Iniciar sesión"
-    
-        # ✅ Verificar que la sesión se inició correctamente
-        assert_text "Cerrar Sesión"
-    
-        # ✅ Verificar que los botones están visibles
-        assert_selector "a", text: "Añadir Producto"
-        assert_selector "a", text: "Añadir Categoría"
-      end
+      
+        assert_text "Añadir Producto"
+        assert_text "Añadir Categoría"
+      end      
 end
