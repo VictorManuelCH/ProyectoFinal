@@ -12,7 +12,8 @@ jobs:
       - name: 📦 Simular despliegue en ambiente de pruebas
         run: echo "Despliegue de prueba exitoso"
 
-  lint-and-security:
+  rubocop-lint:
+    name: 🔍 Linter con RuboCop
     runs-on: ubuntu-latest
     steps:
       - name: 🛠️ Checkout código
@@ -26,26 +27,53 @@ jobs:
       - name: 📦 Instalar dependencias
         run: |
           gem install bundler --no-document
-          bundle config set deployment 'false'  # Permitir instalación local
+          bundle config set deployment 'false' 
           bundle install --jobs 4 --retry 3
 
-      - name: Instalar RuboCop
+      - name: 🛠️ Instalar RuboCop
         run: gem install rubocop
 
-      - name: 🧹 Ejecutar RuboCop (Lint) y guardar salida
+      - name: 🧹 Ejecutar RuboCop y guardar salida
         run: |
           bundle exec rubocop --format simple > rubocop_output.txt || true
-  
+
       - name: 📤 Subir reporte de RuboCop como artefacto
         uses: actions/upload-artifact@v4
         with:
           name: rubocop-report
           path: rubocop_output.txt
+  
+  brakeman-security:
+    name: 🔒 Seguridad con Brakeman
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛠️ Checkout código
+        uses: actions/checkout@v4
 
-      - name: 🔒 Ejecutar Brakeman (Seguridad)
-        run: bundle exec brakeman
+      - name: 🔧 Configurar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.7  
+
+      - name: 📦 Instalar dependencias
+        run: |
+          gem install bundler --no-document
+          bundle config set deployment 'false'  
+          bundle install --jobs 4 --retry 3
+
+      - name: 🛠️ Instalar Brakeman
+        run: gem install brakeman
+
+      - name: 🔒 Ejecutar Brakeman y guardar salida
+        run: |
+          bundle exec brakeman -o brakeman_report.txt || true
+
+      - name: 📤 Subir reporte de Brakeman como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: brakeman-report
+          path: brakeman_report.txt
     
-
   test-unit:
     runs-on: ubuntu-latest
     needs: deploy-to-testing  # Espera a que termine el despliegue simulado
