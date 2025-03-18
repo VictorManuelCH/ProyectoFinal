@@ -26,7 +26,7 @@ jobs:
       - name: 📦 Instalar dependencias
         run: |
           gem install bundler --no-document
-          bundle config set deployment 'true'
+          bundle config set deployment 'false'  # Permitir instalación local
           bundle install --jobs 4 --retry 3
 
       - name: 🧹 Ejecutar RuboCop (Lint)
