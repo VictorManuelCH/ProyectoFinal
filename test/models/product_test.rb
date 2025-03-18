@@ -1,4 +1,5 @@
 require "test_helper"
+require "stringio"
 
 class ProductTest < ActiveSupport::TestCase
   def setup
@@ -13,9 +14,12 @@ class ProductTest < ActiveSupport::TestCase
 
   # 📌 Test para leer un producto (Read)
   test "puede leer un producto" do
-    encontrado = Product.find_by(id: @product.id)
-    assert_equal @product, encontrado, "El producto debería encontrarse correctamente"
+    product = Product.create!(name: "Laptop", description: "Una laptop potente", price: 1500.0)
+
+    encontrado = Product.find_by(id: product.id)
+    assert_equal product, encontrado, "El producto debería encontrarse correctamente"
   end
+
 
   # 📌 Test para actualizar un producto (Update)
   test "puede actualizar un producto" do
@@ -58,11 +62,14 @@ class ProductTest < ActiveSupport::TestCase
 
   # 📌 Test para verificar la asociación con imágenes
   test "puede tener imágenes adjuntas" do
+    image_data = StringIO.new("\xFF\xD8\xFF\xE0" + ("0" * 100)) # Simula un JPG
     product = Product.create!(name: "Cámara", description: "Cámara profesional", price: 1000.0)
-    product.images.attach(io: File.open("test/fixtures/files/sample.jpg"), filename: "sample.jpg", content_type: "image/jpeg")
+
+    product.images.attach(io: image_data, filename: "test.jpg", content_type: "image/jpeg")
 
     assert product.images.attached?, "El producto debería tener imágenes adjuntas"
   end
+
 
   # 📌 Test para validar la búsqueda con Ransack
   test "ransack permite buscar por nombre, descripción y precio" do
