@@ -29,6 +29,9 @@ jobs:
           bundle config set deployment 'false'  # Permitir instalación local
           bundle install --jobs 4 --retry 3
 
+      - name: Instalar RuboCop
+        run: gem install rubocop
+
       - name: 🧹 Ejecutar RuboCop (Lint)
         run: bundle exec rubocop
 
