@@ -45,7 +45,7 @@ class HomeTest < ApplicationSystemTestCase
   # 📌 Test: Un administrador puede ver los botones de agregar producto y categoría
   test "un administrador ve los botones de gestión" do
     User.destroy_all
-    @role = Role.create!(name: "Cliente") # Crear rol
+    @role = Role.create!(name: "Administrador") # Crear rol
     @user = User.create!(
       email: "test@example.com",
       password: "password1",

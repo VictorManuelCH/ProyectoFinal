@@ -4,7 +4,7 @@ require "application_system_test_case"
 class LoginTest < ApplicationSystemTestCase
   setup do
     User.destroy_all
-    @role = Role.create!(name: "Administrador") # Crear rol
+    @role = Role.create!(name: "Cliente") # Crear rol
     @user = User.create!(
       email: "test@example.com",
       password: "password1",
