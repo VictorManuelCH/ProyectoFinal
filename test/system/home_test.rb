@@ -1,20 +1,31 @@
 require "application_system_test_case"
 
 class HomeTest < ApplicationSystemTestCase
-  include Warden::Test::Helpers # Necesario para login_as con Devise
-
+  
   setup do
-    # Crear roles si no existen
-    @admin_role = Role.find_or_create_by!(name: "Administrador")
-    @customer_role = Role.find_or_create_by!(name: "Customer")
+    User.destroy_all
+    Role.destroy_all
+    Product.destroy_all
 
-    # Crear usuarios de prueba
-    @admin = User.create!(email: "admin@example.com", password: "password", role: @admin_role)
-    @customer = User.create!(email: "customer@example.com", password: "password", role: @customer_role)
+    @role_admin = Role.create!(name: "Administrador")
+    @role_customer = Role.create!(name: "Cliente")
 
-    # Crear productos de prueba
-    @product_available = Product.create!(name: "Laptop", description: "Laptop potente", price: 1000, stock: 10)
-    @product_out_of_stock = Product.create!(name: "Tablet", description: "Sin stock", price: 500, stock: 0)
+    @admin = User.create!(
+      email: "admin@example.com",
+      password: "password1",
+      password_confirmation: "password1",
+      role_id: @role_admin.id
+    )
+
+    @customer = User.create!(
+      email: "customer@example.com",
+      password: "password1",
+      password_confirmation: "password1",
+      role_id: @role_customer.id
+    )
+
+    @product_available = Product.create!(name: "Laptop", price: 1000, stock: 10)
+    @product_out_of_stock = Product.create!(name: "Tablet", price: 500, stock: 0)
   end
 
   # 📌 Test: La página principal carga correctamente
@@ -74,3 +85,4 @@ class HomeTest < ApplicationSystemTestCase
     assert_not_includes allowed_attributes, "created_at", "Ransack no debería permitir búsqueda por created_at"
   end
 end
+
