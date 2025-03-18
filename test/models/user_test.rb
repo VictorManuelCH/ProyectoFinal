@@ -5,18 +5,16 @@ class UserTest < ActiveSupport::TestCase
     # Crear roles
     @role_admin = Role.create!(name: "Administrador")
     @role_customer = Role.create!(name: "Customer")
-
-    # Crear usuarios
-    @admin = User.create!(email: "admin@example.com", password: "password")
-    @admin.roles << @role_admin
-
-    @customer = User.create!(email: "customer@example.com", password: "password")
-    @customer.roles << @role_customer
-
+  
+    # Crear usuarios con `role_id`
+    @admin = User.create!(email: "admin@example.com", password: "password", role_id: @role_admin.id)
+    @customer = User.create!(email: "customer@example.com", password: "password", role_id: @role_customer.id)
+  
     # Crear productos
     @product_available = Product.create!(name: "Laptop", description: "Laptop potente", price: 1000.0, quantity: 10)
     @product_out_of_stock = Product.create!(name: "Tablet", description: "Tablet sin stock", price: 500.0, quantity: 0)
   end
+  
 
   # 📌 Test para verificar que un usuario puede crearse
   test "puede crear un usuario" do

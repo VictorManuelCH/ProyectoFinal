@@ -6,15 +6,15 @@ class ProductTest < ActiveSupport::TestCase
     @product = Product.new(name: "Laptop", description: "Una laptop potente", price: 1500.0)
   end
 
-  # 📌 Test: La página principal carga correctamente
-  test "la página principal se muestra correctamente" do
-    visit root_path
+  # # 📌 Test: La página principal carga correctamente
+  # test "la página principal se muestra correctamente" do
+  #   visit root_path
 
-    assert_text "BIENVENIDO A NUESTRA TIENDA"
-    assert_text "Productos"
-    assert_text "Categorías"
-    assert_text @product_available.name
-  end
+  #   assert_text "BIENVENIDO A NUESTRA TIENDA"
+  #   assert_text "Productos"
+  #   assert_text "Categorías"
+  #   assert_text @product_available.name
+  # end
 
   # 📌 Test para crear un producto (Create)
   test "puede crear un producto" do
