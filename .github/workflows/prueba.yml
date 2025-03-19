@@ -206,7 +206,9 @@ jobs:
       
       - name: 🔍 Instalar las gemas que faltan
         run: |
-          gem install bundler --no-document
+          gem install bundler --no-document --user-install
+          echo "GEM_PATH=$(gem env user_gemhome)" >> $GITHUB_ENV
+          export PATH=$(gem env user_gemhome)/bin:$PATH
           bundle config set --local path 'vendor/bundle'
           bundle install --jobs 4 --retry 3
 
@@ -273,9 +275,12 @@ jobs:
       
       - name: 🔍 Instalar las gemas que faltan
         run: |
-          gem install bundler --no-document
+          gem install bundler --no-document --user-install
+          echo "GEM_PATH=$(gem env user_gemhome)" >> $GITHUB_ENV
+          export PATH=$(gem env user_gemhome)/bin:$PATH
           bundle config set --local path 'vendor/bundle'
           bundle install --jobs 4 --retry 3
+
       
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
