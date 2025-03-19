@@ -78,7 +78,7 @@ jobs:
         run: ruby -v
   
       - name: 🗄️ Configurar base de datos
-        run: bin/rails db:create db:migrate
+        run: bundle exec bin/rails db:create db:migrate
       
       - name: 📤 Guardar dump de la BD
         run: pg_dump -U postgres -h localhost tienda3_test > db_dump.sql
