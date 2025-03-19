@@ -1,17 +1,64 @@
 name: Run Tests
 
-on: [push, pull_request]  # Ejecuta en cada push y PR
+on: [push, pull_request]  
 
 
 jobs:
   deploy-to-testing:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tienda3_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/tienda3_test"
+      REDIS_URL: "redis://localhost:6379/0"
+
     steps:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
 
-      - name: 📦 Simular despliegue en ambiente de pruebas
-        run: echo "Despliegue de prueba exitoso"
+      - name: 🔧 Configurar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.7  
+
+      - name: 📦 Instalar dependencias
+        run: |
+          gem install bundler --no-document
+          bundle install --jobs 4 --retry 3
+        
+      - name: 🗄️ Configurar base de datos
+        run: bin/rails db:create db:migrate
+
+      - name: 🚀 Iniciar servidor en segundo plano
+        run: |
+          bundle exec rails server -b 0.0.0.0 -p 3000 &
+
+      - name: 🔍 Probar si el servidor responde
+        run: |
+          sleep 10  # Esperar a que el servidor inicie
+          curl -I http://localhost:3000 || exit 1
+
+      - name: ✅ Confirmar despliegue exitoso
+        run: echo "¡La aplicación está corriendo en ambiente de pruebas!"
 
   rubocop-lint:
     name: 🔍 Linter con RuboCop
