@@ -196,15 +196,30 @@ jobs:
     steps:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
+        
+      - name: 🛠️ Configurar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.7
+          bundler-cache: true
       
-      - name: 🔗 Usar Ruby instalado
-        run: echo "${{ needs.setup-ruby.outputs.ruby-path }}/bin" >> $GITHUB_PATH
-
+      - name: 🔧 Configurar PATH y GEM_PATH
+        run: |
+          echo "GEM_HOME=$(gem env user_gemhome)" >> $GITHUB_ENV
+          echo "GEM_PATH=$(gem env user_gemhome)" >> $GITHUB_ENV
+          echo "$(gem env user_gemhome)/bin" >> $GITHUB_PATH
+      
       - name: 📥 Restaurar caché de gems
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            gems-${{ runner.os }}-
+      
+      - name: 🔍 Instalar las gemas que faltan
+        run: bundle install --jobs 4 --retry 3
+      
 
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
@@ -256,14 +271,28 @@ jobs:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
       
-      - name: 🔗 Usar Ruby instalado
-        run: echo "${{ needs.setup-ruby.outputs.ruby-path }}/bin" >> $GITHUB_PATH
-
+      - name: 🛠️ Configurar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.7
+          bundler-cache: true
+      
+      - name: 🔧 Configurar PATH y GEM_PATH
+        run: |
+          echo "GEM_HOME=$(gem env user_gemhome)" >> $GITHUB_ENV
+          echo "GEM_PATH=$(gem env user_gemhome)" >> $GITHUB_ENV
+          echo "$(gem env user_gemhome)/bin" >> $GITHUB_PATH
+      
       - name: 📥 Restaurar caché de gems
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            gems-${{ runner.os }}-
+      
+      - name: 🔍 Instalar las gemas que faltan
+        run: bundle install --jobs 4 --retry 3
       
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
