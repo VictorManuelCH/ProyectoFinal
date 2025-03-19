@@ -51,16 +51,16 @@ jobs:
           restore-keys: |
             gems-${{ runner.os }}-
       
-      - name: 🔍 Instalar las gemas que faltan
+      - name: Instalar las gemas que faltan
         run: |
           gem install bundler --no-document
           bundle config set --local path 'vendor/bundle'
           bundle install --jobs 4 --retry 3
 
-      - name: 🧹 Ejecutar RuboCop y guardar salida
+      - name: Ejecutar RuboCop y guardar salida
         run: bundle exec rubocop --format simple > rubocop_output.txt || true
 
-      - name: 📤 Subir reporte de RuboCop como artefacto
+      - name: Subir reporte de RuboCop como artefacto
         uses: actions/upload-artifact@v4
         with:
           name: rubocop-report
