@@ -201,7 +201,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2.7
-          bundler-cache: true
       
       - name: 🔧 Configurar PATH y GEM_PATH
         run: |
@@ -275,8 +274,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2.7
-          bundler-cache: true
-      
+
       - name: 🔧 Configurar PATH y GEM_PATH
         run: |
           echo "GEM_HOME=$(gem env user_gemhome)" >> $GITHUB_ENV
