@@ -47,6 +47,18 @@ jobs:
         
       - name: 🗄️ Configurar base de datos
         run: bin/rails db:create db:migrate
+      
+      - name: 📤 Guardar dump de la BD
+        run: pg_dump -U postgres -h localhost tienda3_test > db_dump.sql
+        env:
+          PGPASSWORD: postgres
+
+      - name: 📤 Subir dump como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-dump
+          path: db_dump.sql
+
 
       - name: 🚀 Iniciar servidor en segundo plano
         run: |
@@ -124,7 +136,7 @@ jobs:
     
   test-unit:
     runs-on: ubuntu-latest
-    needs: deploy-to-testing  # Espera a que termine el despliegue simulado
+    needs: deploy-to-testing  
     services:
       postgres:
         image: postgres:15  
@@ -165,8 +177,16 @@ jobs:
           bundle config set deployment 'true'
           bundle install --jobs 4 --retry 3
         
-      - name: 🗄️ Configurar base de datos
-        run: bin/rails db:drop db:create db:migrate
+      - name: 🗄️ Descargar dump de la BD
+        uses: actions/download-artifact@v4
+        with:
+          name: database-dump
+
+      - name: 🔄 Restaurar BD desde dump
+        run: psql -U postgres -h localhost -d tienda3_test < db_dump.sql
+        env:
+          PGPASSWORD: postgres
+
 
       - name: ✅ Ejecutar pruebas unitarias
         run: |
@@ -238,8 +258,16 @@ jobs:
           sudo chmod +x /usr/local/bin/chromedriver
           chromedriver --version
 
-      - name: 🗄️ Configurar base de datos
-        run: bin/rails db:drop db:create db:migrate
+      - name: 🗄️ Descargar dump de la BD
+        uses: actions/download-artifact@v4
+        with:
+          name: database-dump
+
+      - name: 🔄 Restaurar BD desde dump
+        run: psql -U postgres -h localhost -d tienda3_test < db_dump.sql
+        env:
+          PGPASSWORD: postgres
+
 
       - name: ✅ Ejecutar pruebas de sistema individualmente
         run: |
