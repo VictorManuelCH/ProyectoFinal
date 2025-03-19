@@ -2,10 +2,38 @@ name: Run Tests
 
 on: [push, pull_request]  
 
-
 jobs:
+  setup-ruby:
+    runs-on: ubuntu-latest
+    outputs:
+      bundle-cache-key: ${{ steps.bundle-cache.outputs.cache-key }}
+    steps:
+      - name: 🛠️ Checkout código
+        uses: actions/checkout@v4
+
+      - name: 🔧 Configurar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.7  
+
+      - name: 📦 Instalar Bundler y dependencias
+        run: |
+          gem install bundler --no-document
+          bundle config set deployment 'true'
+          bundle install --jobs 4 --retry 3
+
+      - name: 📤 Guardar gems en caché
+        id: bundle-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            gems-${{ runner.os }}-
+
   deploy-to-testing:
     runs-on: ubuntu-latest
+    needs: setup-ruby
     services:
       postgres:
         image: postgres:15
@@ -35,16 +63,12 @@ jobs:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
 
-      - name: 🔧 Configurar Ruby
-        uses: ruby/setup-ruby@v1
+      - name: 📥 Restaurar caché de gems
+        uses: actions/cache@v3
         with:
-          ruby-version: 3.2.7  
+          path: vendor/bundle
+          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
 
-      - name: 📦 Instalar dependencias
-        run: |
-          gem install bundler --no-document
-          bundle install --jobs 4 --retry 3
-        
       - name: 🗄️ Configurar base de datos
         run: bin/rails db:create db:migrate
       
@@ -59,39 +83,18 @@ jobs:
           name: database-dump
           path: db_dump.sql
 
-
-      - name: 🚀 Iniciar servidor en segundo plano
-        run: |
-          bundle exec rails server -b 0.0.0.0 -p 3000 &
-
-      - name: 🔍 Probar si el servidor responde
-        run: |
-          sleep 10  # Esperar a que el servidor inicie
-          curl -I http://localhost:3000 || exit 1
-
-      - name: ✅ Confirmar despliegue exitoso
-        run: echo "¡La aplicación está corriendo en ambiente de pruebas!"
-
   rubocop-lint:
-    name: 🔍 Linter con RuboCop
     runs-on: ubuntu-latest
+    needs: setup-ruby
     steps:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
 
-      - name: 🔧 Configurar Ruby
-        uses: ruby/setup-ruby@v1
+      - name: 📥 Restaurar caché de gems
+        uses: actions/cache@v3
         with:
-          ruby-version: 3.2.7  
-
-      - name: 📦 Instalar dependencias
-        run: |
-          gem install bundler --no-document
-          bundle config set deployment 'false' 
-          bundle install --jobs 4 --retry 3
-
-      - name: 🛠️ Instalar RuboCop
-        run: gem install rubocop
+          path: vendor/bundle
+          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
 
       - name: 🧹 Ejecutar RuboCop y guardar salida
         run: |
@@ -102,27 +105,19 @@ jobs:
         with:
           name: rubocop-report
           path: rubocop_output.txt
-  
+
   brakeman-security:
-    name: 🔒 Seguridad con Brakeman
     runs-on: ubuntu-latest
+    needs: setup-ruby
     steps:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
 
-      - name: 🔧 Configurar Ruby
-        uses: ruby/setup-ruby@v1
+      - name: 📥 Restaurar caché de gems
+        uses: actions/cache@v3
         with:
-          ruby-version: 3.2.7  
-
-      - name: 📦 Instalar dependencias
-        run: |
-          gem install bundler --no-document
-          bundle config set deployment 'false'  
-          bundle install --jobs 4 --retry 3
-
-      - name: 🛠️ Instalar Brakeman
-        run: gem install brakeman
+          path: vendor/bundle
+          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
 
       - name: 🔒 Ejecutar Brakeman y guardar salida
         run: |
@@ -133,50 +128,20 @@ jobs:
         with:
           name: brakeman-report
           path: brakeman_report.txt
-    
+
   test-unit:
     runs-on: ubuntu-latest
-    needs: deploy-to-testing  
-    services:
-      postgres:
-        image: postgres:15  
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: tienda3_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      
-      redis:
-        image: redis:latest
-        ports:
-          - 6379:6379
-
-    env:
-      RAILS_ENV: test
-      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/tienda3_test"
-      REDIS_URL: "redis://localhost:6379/0"
-
+    needs: deploy-to-testing
     steps:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
 
-      - name: 🔧 Configurar Ruby
-        uses: ruby/setup-ruby@v1
+      - name: 📥 Restaurar caché de gems
+        uses: actions/cache@v3
         with:
-          ruby-version: 3.2.7  
+          path: vendor/bundle
+          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
 
-      - name: 📦 Instalar dependencias
-        run: |
-          gem install bundler --no-document
-          bundle config set deployment 'true'
-          bundle install --jobs 4 --retry 3
-        
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
         with:
@@ -187,76 +152,27 @@ jobs:
         env:
           PGPASSWORD: postgres
 
-
       - name: ✅ Ejecutar pruebas unitarias
-        run: |
-          mkdir -p tmp
-          bundle exec rails test | tee tmp/test-results-unit.log      
+        run: bundle exec rails test | tee tmp/test-results-unit.log      
 
       - name: 📤 Guardar resultados de pruebas unitarias
         uses: actions/upload-artifact@v4
         with:
           name: test-results-unit
           path: tmp/test-results-unit.log
-          retention-days: 7
 
   test-system:
     runs-on: ubuntu-latest
-    needs: deploy-to-testing  
-    services:
-      postgres:
-        image: postgres:15  
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: tienda3_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      
-      redis:
-        image: redis:latest
-        ports:
-          - 6379:6379
-
-    env:
-      RAILS_ENV: test
-      DATABASE_URL: "postgres://postgres:postgres@localhost:5432/tienda3_test"
-      REDIS_URL: "redis://localhost:6379/0"
-
+    needs: deploy-to-testing
     steps:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
 
-      - name: 🔧 Configurar Ruby
-        uses: ruby/setup-ruby@v1
+      - name: 📥 Restaurar caché de gems
+        uses: actions/cache@v3
         with:
-          ruby-version: 3.2.7  
-
-      - name: 📦 Instalar dependencias
-        run: |
-          gem install bundler --no-document
-          bundle config set deployment 'true'
-          bundle install --jobs 4 --retry 3
-        
-      - name: Install Chrome and WebDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-          wget -N https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
-          unzip chromedriver_linux64.zip -d /usr/local/bin/
-          rm chromedriver_linux64.zip
-          sudo chmod +x /usr/local/bin/chromedriver
-          chromedriver --version
+          path: vendor/bundle
+          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
 
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
@@ -268,26 +184,21 @@ jobs:
         env:
           PGPASSWORD: postgres
 
-
       - name: ✅ Ejecutar pruebas de sistema individualmente
         run: |
-          mkdir -p tmp
           for test_file in $(find test/system -name "*.rb"); do
-            echo "Ejecutando: $test_file"
             bundle exec rails test $test_file | tee -a tmp/test-results-system.log
           done
-        
 
       - name: 📤 Guardar resultados de pruebas de sistema
         uses: actions/upload-artifact@v4
         with:
           name: test-results-system
           path: tmp/test-results-system.log
-          retention-days: 7
 
   merge-test-results:
     runs-on: ubuntu-latest
-    needs: [test-unit, test-system]  # Espera que terminen ambos
+    needs: [test-unit, test-system]
     steps:
       - name: 📥 Descargar resultados de test unitarios
         uses: actions/download-artifact@v4
@@ -309,5 +220,3 @@ jobs:
         with:
           name: test-results-combined
           path: tmp/test-results-combined.log
-          retention-days: 7
-        
