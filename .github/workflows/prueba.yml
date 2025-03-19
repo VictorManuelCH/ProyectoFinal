@@ -68,7 +68,10 @@ jobs:
         with:
           path: vendor/bundle
           key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
-
+      
+      - name: 🔍 Verificar Ruby activo
+        run: ruby -v
+  
       - name: 🗄️ Configurar base de datos
         run: bin/rails db:create db:migrate
       
