@@ -156,6 +156,11 @@ jobs:
         with:
           path: vendor/bundle
           key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+          
+      - name: 📌 Verificar estado de PostgreSQL
+        run: |
+            sudo systemctl status postgresql || echo "PostgreSQL no está corriendo"
+        
 
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
@@ -191,6 +196,10 @@ jobs:
         with:
           path: vendor/bundle
           key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+      
+      - name: 📌 Verificar estado de PostgreSQL
+        run: |
+            sudo systemctl status postgresql || echo "PostgreSQL no está corriendo"
 
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
