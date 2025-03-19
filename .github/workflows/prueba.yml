@@ -47,10 +47,15 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            gems-${{ runner.os }}-
       
       - name: 🔍 Instalar las gemas que faltan
-        run: bundle install --path vendor/bundle --jobs=4 --retry=3
+        run: |
+          gem install bundler --no-document
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3
 
       - name: 🧹 Ejecutar RuboCop y guardar salida
         run: bundle exec rubocop --format simple > rubocop_output.txt || true
@@ -75,10 +80,15 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
-
+          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            gems-${{ runner.os }}-
+      
       - name: 🔍 Instalar las gemas que faltan
-        run: bundle install --path vendor/bundle --jobs=4 --retry=3
+        run: |
+          gem install bundler --no-document
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3
 
       - name: 🔒 Ejecutar Brakeman y guardar salida
         run: bundle exec brakeman -o brakeman_report.txt || true
@@ -128,10 +138,15 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            gems-${{ runner.os }}-
       
       - name: 🔍 Instalar las gemas que faltan
-        run: bundle install --path vendor/bundle --jobs=4 --retry=3
+        run: |
+          gem install bundler --no-document
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3
   
       - name: 🗄️ Configurar base de datos
         run: bundle exec bin/rails db:create db:migrate
@@ -180,15 +195,20 @@ jobs:
       
       - name: 🔗 Usar Ruby instalado
         run: echo "${{ needs.setup-ruby.outputs.ruby-path }}/bin" >> $GITHUB_PATH
-
+      
       - name: 📥 Restaurar caché de gems
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            gems-${{ runner.os }}-
       
       - name: 🔍 Instalar las gemas que faltan
-        run: bundle install --path vendor/bundle --jobs=4 --retry=3
+        run: |
+          gem install bundler --no-document
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3
 
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
@@ -247,11 +267,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            gems-${{ runner.os }}-
       
       - name: 🔍 Instalar las gemas que faltan
-        run: bundle install --path vendor/bundle --jobs=4 --retry=3
-
+        run: |
+          gem install bundler --no-document
+          bundle config set --local path 'vendor/bundle'
+          bundle install --jobs 4 --retry 3
+      
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
         with:
