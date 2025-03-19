@@ -197,27 +197,14 @@ jobs:
       - name: 🛠️ Checkout código
         uses: actions/checkout@v4
       
-      - name: 🔧 Configurar Ruby
-        id: ruby-setup
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.2.7    
-      
+      - name: 🔗 Usar Ruby instalado
+        run: echo "${{ needs.setup-ruby.outputs.ruby-path }}/bin" >> $GITHUB_PATH
+
       - name: 📥 Restaurar caché de gems
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
-          restore-keys: |
-            gems-${{ runner.os }}-
-      
-      - name: 🔍 Instalar las gemas que faltan
-        run: |
-          gem install bundler --no-document --user-install
-          echo "GEM_PATH=$(gem env user_gemhome)" >> $GITHUB_ENV
-          export PATH=$(gem env user_gemhome)/bin:$PATH
-          bundle config set --local path 'vendor/bundle'
-          bundle install --jobs 4 --retry 3
+          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
 
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
@@ -276,18 +263,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor/bundle
-          key: gems-${{ runner.os }}-${{ hashFiles('Gemfile.lock') }}
-          restore-keys: |
-            gems-${{ runner.os }}-
-      
-      - name: 🔍 Instalar las gemas que faltan
-        run: |
-          gem install bundler --no-document --user-install
-          echo "GEM_PATH=$(gem env user_gemhome)" >> $GITHUB_ENV
-          export PATH=$(gem env user_gemhome)/bin:$PATH
-          bundle config set --local path 'vendor/bundle'
-          bundle install --jobs 4 --retry 3
-
+          key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
       
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
