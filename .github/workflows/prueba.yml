@@ -48,6 +48,9 @@ jobs:
         with:
           path: vendor/bundle
           key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+      
+      - name: 🔍 Instalar las gemas que faltan
+        run: bundle install --path vendor/bundle --jobs=4 --retry=3
 
       - name: 🧹 Ejecutar RuboCop y guardar salida
         run: bundle exec rubocop --format simple > rubocop_output.txt || true
@@ -73,6 +76,9 @@ jobs:
         with:
           path: vendor/bundle
           key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+
+      - name: 🔍 Instalar las gemas que faltan
+        run: bundle install --path vendor/bundle --jobs=4 --retry=3
 
       - name: 🔒 Ejecutar Brakeman y guardar salida
         run: bundle exec brakeman -o brakeman_report.txt || true
@@ -180,6 +186,9 @@ jobs:
         with:
           path: vendor/bundle
           key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+      
+      - name: 🔍 Instalar las gemas que faltan
+        run: bundle install --path vendor/bundle --jobs=4 --retry=3
 
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
@@ -239,6 +248,9 @@ jobs:
         with:
           path: vendor/bundle
           key: gems-${{ needs.setup-ruby.outputs.bundle-cache-key }}
+      
+      - name: 🔍 Instalar las gemas que faltan
+        run: bundle install --path vendor/bundle --jobs=4 --retry=3
 
       - name: 🗄️ Descargar dump de la BD
         uses: actions/download-artifact@v4
