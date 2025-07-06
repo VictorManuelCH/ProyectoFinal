@@ -23,7 +23,6 @@ jobs:
           gem install bundler --no-document
           bundle config set deployment 'true'
           bundle install --jobs 4 --retry 3
-
       - name: Guardar gems en caché
         id: bundle-cache
         uses: actions/cache@v3
@@ -53,10 +52,9 @@ jobs:
       
       - name: Instalar las gemas que faltan
         run: |
-          gem install bundler --no-document --user-install
+          gem install bundler --no-document
           bundle config set --local path 'vendor/bundle'
           bundle install --jobs 4 --retry 3
-
       - name: Ejecutar RuboCop y guardar salida
         run: bundle exec rubocop --format simple > rubocop_output.txt || true
 
@@ -86,10 +84,9 @@ jobs:
       
       - name: Instalar las gemas que faltan
         run: |
-          gem install bundler --no-document --user-install
+          gem install bundler --no-document
           bundle config set --local path 'vendor/bundle'
           bundle install --jobs 4 --retry 3
-
       - name: Ejecutar Brakeman y guardar salida
         run: bundle exec brakeman -o brakeman_report.txt || true
 
@@ -183,7 +180,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
       redis:
         image: redis:latest
         ports:
@@ -256,7 +252,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
       redis:
         image: redis:latest
         ports:
@@ -307,7 +302,6 @@ jobs:
           for test_file in $(find test/system -name "*.rb"); do
             bundle exec rails test $test_file | tee -a tmp/test-results-system.log
           done
-
       - name: Guardar resultados de pruebas de sistema
         uses: actions/upload-artifact@v4
         with:
@@ -339,4 +333,3 @@ jobs:
           name: test-results-combined
           path: tmp/test-results-combined.log
           retention-days: 7
-        
