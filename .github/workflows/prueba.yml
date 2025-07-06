@@ -39,8 +39,11 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
       
-      - name: Usar Ruby instalado
-        run: echo "${{ needs.setup-ruby.outputs.ruby-path }}/bin" >> $GITHUB_PATH
+      - name: Configurar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.7
+
 
       - name: Restaurar caché de gems
         uses: actions/cache@v3
@@ -77,8 +80,11 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
       
-      - name: Usar Ruby instalado
-        run: echo "${{ needs.setup-ruby.outputs.ruby-path }}/bin" >> $GITHUB_PATH
+      - name: Configurar Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.7
+
 
       - name: Restaurar caché de gems
         uses: actions/cache@v3
