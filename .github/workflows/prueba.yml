@@ -351,3 +351,4 @@ jobs:
           name: test-results-combined
           path: tmp/test-results-combined.log
           retention-days: 7
+          
