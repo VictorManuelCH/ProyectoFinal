@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.2.7'
 
-gem 'bootstrap', '~> 5.1.3'
+gem 'bootstrap', '~> 5.3.2'
 gem 'bunny'
 gem 'devise'
 gem 'ransack'
