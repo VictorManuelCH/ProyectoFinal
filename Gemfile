@@ -8,12 +8,12 @@ ruby '3.2.7'
 gem 'bootstrap', '~> 5.1.3'
 gem 'bunny'
 gem 'devise'
-gem 'ransack'
+gem 'ransack', '>= 4.1.0'
 gem 'sassc-rails'
 gem 'sneakers'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.0.8', '>= 7.0.8.7'
+gem 'rails', '~> 7.1.5', '>= 7.1.5.2'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
@@ -34,7 +34,7 @@ gem 'turbo-rails'
 gem 'stimulus-rails'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
-gem 'jbuilder'
+gem 'jbuilder', '>= 2.14.0'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
