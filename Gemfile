@@ -7,7 +7,7 @@ ruby '3.2.7'
 
 gem 'bootstrap', '~> 5.1.3'
 gem 'bunny'
-gem 'devise'
+gem 'devise', '>= 5.0.0'
 gem 'ransack'
 gem 'sassc-rails'
 gem 'sneakers'
